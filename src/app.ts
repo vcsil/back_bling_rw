@@ -1,4 +1,6 @@
 import express from "express";
+import chalk from "chalk";
+
 import { convertCLTToPJ } from "./controllers/calculator-controller";
 const server = express()
 
@@ -10,5 +12,5 @@ server.get("/calculator", convertCLTToPJ)
 
 const PORT = 4000
 server.listen(PORT, () => {
-  console.log(`Disponível na porta ${PORT}`);
+  console.log(chalk.blackBright(`Server is listening on port ${PORT}.`));
 });
