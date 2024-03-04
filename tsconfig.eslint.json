@@ -1,0 +1,6 @@
+// https://medium.com/@ErikKyleNielsen/setting-up-eslint-prettier-airbnb-base-and-typescript-27b3f9538f0d
+{
+    "extends": "./tsconfig.json",
+    "include": ["./src", "./**/*.ts", "./**/*.js", "./.*.js"],
+    "exclude": ["node_modules", "dist"]
+}
