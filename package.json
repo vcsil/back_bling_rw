@@ -7,7 +7,8 @@
     "dev": "nodemon src/app.ts",
     "build": "tsc --project tsconfig.build.json",
     "clean": "rimraf dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "engines": {
     "node": "20.11.1"
