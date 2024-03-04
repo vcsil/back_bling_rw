@@ -8,7 +8,8 @@
     "plugins": [
         "@typescript-eslint",
         "saas",
-        "import"
+        "import",
+        "prettier"
     ],
     "extends": [
         "eslint:recommended",
@@ -19,7 +20,8 @@
         "plugin:json/recommended",
         "plugin:@typescript-eslint/recommended",
         "airbnb-base",
-        "airbnb-typescript/base"
+        "airbnb-typescript/base",
+        "plugin:prettier/recommended"
     ],
     "settings": {
         "import/parsers": {
