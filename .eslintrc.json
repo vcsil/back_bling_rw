@@ -7,7 +7,6 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "saas",
         "import",
         "prettier"
     ],
@@ -42,7 +41,7 @@
         "project": "./tsconfig.eslint.json"
     },
     "rules": {
-        "saas/rule-name": 2,
-        "import/no-unresolved": "error"
+        "import/no-extraneous-dependencies": [2, { "devDependencies": ["**/test.tsx", "**/test.ts"] }]
+        // "import/no-unresolved": "error"
     }
 }
