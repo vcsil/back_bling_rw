@@ -12,5 +12,5 @@ server.get("/calculator", convertCLTToPJ)
 
 const PORT = 4000
 server.listen(PORT, () => {
-  console.log(chalk.blackBright(`Server is listening on port ${PORT}.`));
+  console.log(chalk.blueBright(`Server is listening on port ${PORT}.`));
 });
