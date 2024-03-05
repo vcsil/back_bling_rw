@@ -1,0 +1,721 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model categorias_receitas_despesas {
+  id_bling                                                                                                                   BigInt                                 @id
+  nome                                                                                                                       String                                 @db.VarChar(45)
+
+  id_tipo                                                                                                                    BigInt
+  categorias_receitas_despesas_tipo                                                                                          categorias_receitas_despesas_tipo      @relation(fields: [id_tipo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  situacao                                                                                                                   Boolean
+
+  categorias_receitas_despesas_relacao_categorias_receitas_despesas_relacao_id_categoria_filhoTocategorias_receitas_despesas categorias_receitas_despesas_relacao?  @relation("categorias_receitas_despesas_relacao_id_categoria_filhoTocategorias_receitas_despesas")
+  categorias_receitas_despesas_relacao_categorias_receitas_despesas_relacao_id_categoria_paiTocategorias_receitas_despesas   categorias_receitas_despesas_relacao[] @relation("categorias_receitas_despesas_relacao_id_categoria_paiTocategorias_receitas_despesas")
+  contas_receitas_despesas                                                                                                   contas_receitas_despesas[]
+  vendas                                                                                                                     vendas[]
+}
+
+model categorias_receitas_despesas_relacao {
+  id                                                                                                                 Int                          @id @default(autoincrement())
+
+  id_categoria_pai                                                                                                   BigInt
+  categorias_receitas_despesas_categorias_receitas_despesas_relacao_id_categoria_paiTocategorias_receitas_despesas   categorias_receitas_despesas @relation("categorias_receitas_despesas_relacao_id_categoria_paiTocategorias_receitas_despesas", fields: [id_categoria_pai], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_categoria_filho                                                                                                 BigInt                       @unique
+  categorias_receitas_despesas_categorias_receitas_despesas_relacao_id_categoria_filhoTocategorias_receitas_despesas categorias_receitas_despesas @relation("categorias_receitas_despesas_relacao_id_categoria_filhoTocategorias_receitas_despesas", fields: [id_categoria_filho], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model categorias_receitas_despesas_tipo {
+  id                           BigInt                         @id
+  nome                         String                         @db.VarChar(25)
+
+  categorias_receitas_despesas categorias_receitas_despesas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model contas_contabeis {
+  id_bling                 BigInt                     @id
+  nome                     String                     @db.VarChar(45)
+
+  contas_receitas_despesas contas_receitas_despesas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contas_receitas_despesas {
+  id_bling                     BigInt                       @id
+
+  id_situacao                  Int?
+  contas_situacao              contas_situacao?             @relation(fields: [id_situacao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  vencimento                   DateTime                     @db.Date
+  valor                        Int
+
+  id_contato                   BigInt
+  contatos                     contatos                     @relation(fields: [id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_forma_pagamento           BigInt?
+  formas_pagamento             formas_pagamento?            @relation(fields: [id_forma_pagamento], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  saldo                        Int
+  data_emissao                 DateTime                     @default(now()) @db.Date
+  vencimento_original          DateTime                     @default(now()) @db.Date
+  numero_documento             String?                      @db.VarChar(63)
+  competencia                  DateTime                     @db.Date
+  historico                    String
+  numero_banco                 String?                      @db.VarChar(63)
+
+  id_portador                  BigInt?
+  contas_contabeis             contas_contabeis?            @relation(fields: [id_portador], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_categoria_receita_despesa BigInt
+  categorias_receitas_despesas categorias_receitas_despesas @relation(fields: [id_categoria_receita_despesa], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_vendedor                  BigInt?
+  vendedores                   vendedores?                  @relation(fields: [id_vendedor], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_bordero                   BigInt?
+
+  id_tipo_ocorrencia           Int?
+  contas_tipo_ocorrencia       contas_tipo_ocorrencia?      @relation(fields: [id_tipo_ocorrencia], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  considerar_dias_uteis        Boolean?
+  dia_vencimento               DateTime?                    @default(now()) @db.Date
+  numero_parcelas              Int?
+  data_limite                  DateTime?                    @default(now()) @db.Date
+
+  parcelas                     parcelas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contas_situacao {
+  id                       Int                        @id @default(autoincrement())
+  nome                     String                     @db.VarChar(45)
+
+  contas_receitas_despesas contas_receitas_despesas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contas_tipo_ocorrencia {
+  id                       Int                        @id @default(autoincrement())
+  nome                     String                     @db.VarChar(12)
+
+  contas_receitas_despesas contas_receitas_despesas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contatos {
+  id_bling                                      BigInt                                @id
+  nome                                          String                                @db.VarChar(120)
+  sobrenome                                     String                                @db.VarChar(255)
+  codigo                                        String?                               @db.VarChar(45)
+
+  id_situacao_contato                           Int
+  contatos_situacao                             contatos_situacao                     @relation(fields: [id_situacao_contato], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  numero_documento                              String?                               @db.VarChar(14)
+  telefone                                      String?                               @db.VarChar(15)
+  celular                                       String?                               @db.VarChar(15)
+  fantasia                                      String?                               @db.VarChar(63)
+
+  id_tipo_contato                               Int
+  contatos_tipo                                 contatos_tipo                         @relation(fields: [id_tipo_contato], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  id_indicador_inscricao_estadual               Int
+  contatos_indicador_inscricao_estadual         contatos_indicador_inscricao_estadual @relation(fields: [id_indicador_inscricao_estadual], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  inscricao_estadual                            String?                               @db.VarChar(12)
+  rg                                            String?                               @db.VarChar(10)
+  orgao_emissor                                 String?                               @db.VarChar(55)
+  email                                         String?                               @db.VarChar(255)
+  data_nascimento                               DateTime?                             @db.Date
+  sexo                                          Int                                   @default(2)
+
+  id_classificacao_contato                      BigInt?
+  contatos_classificacao                        contatos_classificacao?               @relation(fields: [id_classificacao_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  cliente_desde                                 DateTime                              @default(now()) @db.Timestamptz(6)
+  alterado_em                                   DateTime?                             @db.Timestamptz(6)
+
+  contas_receitas_despesas                      contas_receitas_despesas[]
+  contatos_enderecos                            contatos_enderecos[]
+  produto_fornecedor                            produto_fornecedor[]
+  vendas_vendas_id_contatoTocontatos            vendas[]                              @relation("vendas_id_contatoTocontatos")
+  vendas_vendas_transporte_id_contatoTocontatos vendas[]                              @relation("vendas_transporte_id_contatoTocontatos")
+  vendedores                                    vendedores[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contatos_classificacao {
+  id_bling BigInt     @id
+  nome     String     @unique @db.VarChar(63)
+
+  contatos contatos[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contatos_enderecos {
+  id            Int       @id @default(autoincrement())
+
+  id_contato    BigInt
+  contatos      contatos  @relation(fields: [id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_endereco   Int
+  enderecos     enderecos @relation(fields: [id_endereco], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  tipo_endereco Int       @db.SmallInt
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contatos_indicador_inscricao_estadual {
+  id       Int        @id
+  nome     String     @unique @db.VarChar(63)
+
+  contatos contatos[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contatos_situacao {
+  id       Int        @id @default(autoincrement())
+  nome     String     @unique @db.VarChar(20)
+  sigla    String     @unique @db.Char(1)
+
+  contatos contatos[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contatos_tipo {
+  id       Int        @id @default(autoincrement())
+  nome     String     @unique @db.VarChar(20)
+  sigla    String     @unique @db.Char(1)
+
+  contatos contatos[]
+}
+
+model dimensoes {
+  id             Int        @id @default(autoincrement())
+  largura        Int
+  altura         Int
+  profundidade   Int
+  unidade_medida Int
+
+  produtos       produtos[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model endereco_bairros {
+  id                  Int                 @id @default(autoincrement())
+  nome                String?             @db.VarChar(63)
+
+  id_municipio        Int
+  endereco_municipios endereco_municipios @relation(fields: [id_municipio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  enderecos           enderecos[]
+
+  @@unique([nome, id_municipio], map: "uq_bairro_idmunicipio")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model endereco_municipios {
+  id                          Int                         @id @default(autoincrement())
+  nome                        String?                     @db.VarChar(63)
+
+  id_uf                       Int
+  endereco_unidade_federativa endereco_unidade_federativa @relation(fields: [id_uf], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  endereco_bairros            endereco_bairros[]
+  enderecos                   enderecos[]
+
+  @@unique([nome, id_uf], map: "uq_municipio_iduf")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model endereco_paises {
+  id                          Int                           @id @default(autoincrement())
+  nome                        String                        @unique @db.VarChar(63)
+
+  endereco_unidade_federativa endereco_unidade_federativa[]
+  enderecos                   enderecos[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model endereco_unidade_federativa {
+  id                  Int                   @id @default(autoincrement())
+  nome                String?               @db.VarChar(63)
+
+  id_pais             Int
+  endereco_paises     endereco_paises       @relation(fields: [id_pais], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  endereco_municipios endereco_municipios[]
+  enderecos           enderecos[]
+
+  @@unique([nome, id_pais], map: "uq_uf_idpais")
+}
+
+model enderecos {
+  id                          Int                         @id @default(autoincrement())
+  endereco                    String?                     @db.VarChar(127)
+  cep                         String?                     @db.VarChar(8)
+
+  id_bairro                   Int
+  endereco_bairros            endereco_bairros            @relation(fields: [id_bairro], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  id_municipio                Int
+  endereco_municipios         endereco_municipios         @relation(fields: [id_municipio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  id_uf                       Int
+  endereco_unidade_federativa endereco_unidade_federativa @relation(fields: [id_uf], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  id_pais                     Int
+  endereco_paises             endereco_paises             @relation(fields: [id_pais], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  numero                      String?                     @db.VarChar(10)
+  complemento                 String?                     @db.VarChar(127)
+
+  contatos_enderecos          contatos_enderecos[]
+  transporte_etiqueta         transporte_etiqueta[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model formas_pagamento {
+  id_bling                    BigInt                      @id
+  nome                        String                      @db.VarChar(45)
+
+  id_tipo_pagamento           Int
+  tipos_pagamento             tipos_pagamento             @relation(fields: [id_tipo_pagamento], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  situacao                    Boolean
+  fixa                        Boolean
+
+  id_padrao                   Int
+  formas_pagamento_padrao     formas_pagamento_padrao     @relation(fields: [id_padrao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  condicao                    String                      @db.VarChar(5)
+
+  id_destino                  Int
+  formas_pagamento_destino    formas_pagamento_destino    @relation(fields: [id_destino], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  id_finalidade               Int
+  formas_pagamento_finalidade formas_pagamento_finalidade @relation(fields: [id_finalidade], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  taxas_aliquota              Int
+  taxas_valor                 Int
+  taxas_prazo                 Int
+
+  contas_receitas_despesas    contas_receitas_despesas[]
+  parcelas                    parcelas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model formas_pagamento_destino {
+  id               Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(22)
+
+  formas_pagamento formas_pagamento[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model formas_pagamento_finalidade {
+  id               Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(26)
+
+  formas_pagamento formas_pagamento[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model formas_pagamento_padrao {
+  id               Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(16)
+
+  formas_pagamento formas_pagamento[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model modulos {
+  id_bling        BigInt      @id
+  nome            String      @db.VarChar(45)
+  descricao       String      @db.VarChar(120)
+  criar_situacoes Boolean
+
+  situacoes       situacoes[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model parcelas {
+  id_bling                 BigInt                    @id
+
+  id_venda                 BigInt
+  vendas                   vendas                    @relation(fields: [id_venda], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  data_vencimento          DateTime                  @default(now()) @db.Date
+  valor                    Int
+  observacoes              String?                   @db.VarChar(120)
+
+  id_forma_pagamento       BigInt
+  formas_pagamento         formas_pagamento          @relation(fields: [id_forma_pagamento], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_conta_receber         BigInt?
+  contas_receitas_despesas contas_receitas_despesas? @relation(fields: [id_conta_receber], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model produto_fornecedor {
+  id_bling      BigInt    @id
+  descricao     String?   @db.VarChar(150)
+  codigo        String?   @db.VarChar(20)
+  preco_custo   Int
+  preco_compra  Int
+  padrao        Boolean
+
+  id_produto    BigInt
+  produtos      produtos  @relation(fields: [id_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_fornecedor BigInt?
+  contatos      contatos? @relation(fields: [id_fornecedor], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model produto_variacao {
+  id                                                   Int      @id @default(autoincrement())
+
+  id_produto_pai                                       BigInt
+  produtos_produto_variacao_id_produto_paiToprodutos   produtos @relation("produto_variacao_id_produto_paiToprodutos", fields: [id_produto_pai], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_produto_filho                                     BigInt   @unique
+  produtos_produto_variacao_id_produto_filhoToprodutos produtos @relation("produto_variacao_id_produto_filhoToprodutos", fields: [id_produto_filho], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  nome                                                 String   @db.VarChar(120)
+  ordem                                                Int
+  clone_pai                                            Boolean
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model produtos {
+  id_bling                                                     BigInt                    @id
+  nome                                                         String                    @db.VarChar(120)
+  codigo                                                       String                    @db.VarChar(120)
+  preco                                                        Int
+  
+  id_tipo_produto                                              Int                       @default(2)
+  produtos_tipos                                               produtos_tipos            @relation(fields: [id_tipo_produto], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  situacao_produto                                             String                    @default("Ativo") @db.VarChar(10)
+  
+  id_formato_produto                                           Int
+  produtos_formatos                                            produtos_formatos         @relation(fields: [id_formato_produto], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  id_produto_pai                                               BigInt?
+  produtos                                                     produtos?                 @relation("produtosToprodutos", fields: [id_produto_pai], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  other_produtos                                               produtos[]                @relation("produtosToprodutos")
+  
+  descricao_curta                                              String?
+  data_validade                                                DateTime?                 @db.Date
+  unidade                                                      String?                   @default("UN") @db.VarChar(6)
+  peso_liquido                                                 Int                       @default(1)
+  peso_bruto                                                   Int                       @default(1)
+  volumes                                                      Int                       @default(1)
+  itens_por_caixa                                              Int                       @default(1)
+  gtin                                                         String?                   @db.VarChar(14)
+  gtin_embalagem                                               String?                   @db.VarChar(13)
+  
+  id_tipo_producao                                             Int                       @default(1)
+  produtos_tipo_producao                                       produtos_tipo_producao    @relation(fields: [id_tipo_producao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  id_condicao_producao                                         Int
+  produtos_condicao                                            produtos_condicao         @relation(fields: [id_condicao_producao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  frete_gratis                                                 Boolean                   @default(false)
+  marca                                                        String                    @default("RW") @db.VarChar(45)
+  descricao_complementar                                       String?
+  link_externo                                                 String?
+  observacoes                                                  String?
+  
+  id_categoria_produto                                         BigInt
+  produtos_categorias                                          produtos_categorias       @relation(fields: [id_categoria_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  
+  estoque_minimo                                               Int                       @default(0)
+  estoque_maximo                                               Int                       @default(0)
+  estoque_crossdocking                                         Int                       @default(0)
+  estoque_localizacao                                          String?                   @db.VarChar(45)
+  
+  id_dimensoes                                                 Int
+  dimensoes                                                    dimensoes                 @relation(fields: [id_dimensoes], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  ncm                                                          String?                   @default("7113.20.00") @db.VarChar(10)
+  cest                                                         String?                   @default("28.058.00") @db.VarChar(9)
+  
+  id_midia_principal                                           Int?
+  produtos_midias                                              produtos_midias?          @relation(fields: [id_midia_principal], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  criado_em                                                    DateTime                  @default(now()) @db.Timestamptz(6)
+  alterado_em                                                  DateTime?                 @db.Timestamptz(6)
+
+  produto_fornecedor                                           produto_fornecedor[]
+  produto_variacao_produto_variacao_id_produto_filhoToprodutos produto_variacao?         @relation("produto_variacao_id_produto_filhoToprodutos")
+  produto_variacao_produto_variacao_id_produto_paiToprodutos   produto_variacao[]        @relation("produto_variacao_id_produto_paiToprodutos")
+  produtos_estoques                                            produtos_estoques[]
+  produtos_midias_relacao                                      produtos_midias_relacao[]
+  vendas_itens_produtos                                        vendas_itens_produtos[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model produtos_categorias {
+  id_bling                                                                                        BigInt                        @id
+  nome                                                                                            String                        @db.VarChar(120)
+
+  produtos                                                                                        produtos[]
+  produtos_categorias_relacao_produtos_categorias_relacao_id_categoria_filhoToprodutos_categorias produtos_categorias_relacao?  @relation("produtos_categorias_relacao_id_categoria_filhoToprodutos_categorias")
+  produtos_categorias_relacao_produtos_categorias_relacao_id_categoria_paiToprodutos_categorias   produtos_categorias_relacao[] @relation("produtos_categorias_relacao_id_categoria_paiToprodutos_categorias")
+}
+
+model produtos_categorias_relacao {
+  id                                                                                      Int                 @id @default(autoincrement())
+
+  id_categoria_pai                                                                        BigInt
+  produtos_categorias_produtos_categorias_relacao_id_categoria_paiToprodutos_categorias   produtos_categorias @relation("produtos_categorias_relacao_id_categoria_paiToprodutos_categorias", fields: [id_categoria_pai], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_categoria_filho                                                                      BigInt              @unique
+  produtos_categorias_produtos_categorias_relacao_id_categoria_filhoToprodutos_categorias produtos_categorias @relation("produtos_categorias_relacao_id_categoria_filhoToprodutos_categorias", fields: [id_categoria_filho], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model produtos_condicao {
+  id       Int        @id @default(autoincrement())
+  nome     String     @db.VarChar(17)
+
+  produtos produtos[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model produtos_depositos {
+  id_bling            BigInt              @id
+  descricao           String              @db.VarChar(45)
+  situacao            Boolean             @default(true)
+  padrao              Boolean             @default(true)
+  desconsiderar_saldo Boolean             @default(false)
+
+  produtos_estoques   produtos_estoques[]
+}
+
+model produtos_estoques {
+  id                 Int                @id @default(autoincrement())
+
+  id_produto         BigInt
+  produtos           produtos           @relation(fields: [id_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_deposito        BigInt
+  produtos_depositos produtos_depositos @relation(fields: [id_deposito], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  saldo_fisico       Int
+  saldo_virtual      Int
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model produtos_formatos {
+  id       Int        @id @default(autoincrement())
+  nome     String     @unique @db.VarChar(15)
+  sigla    String     @unique @db.Char(1)
+
+  produtos produtos[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model produtos_midias {
+  id                      Int                       @id @default(autoincrement())
+  tipo                    Boolean
+  url                     String
+
+  produtos                produtos[]
+  produtos_midias_relacao produtos_midias_relacao[]
+}
+
+model produtos_midias_relacao {
+  id              Int             @id @default(autoincrement())
+
+  id_produto      BigInt
+  produtos        produtos        @relation(fields: [id_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_image        Int
+  produtos_midias produtos_midias @relation(fields: [id_image], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model produtos_tipo_producao {
+  id       Int        @id @default(autoincrement())
+  nome     String     @unique @db.VarChar(10)
+  sigla    String     @unique @db.Char(1)
+
+  produtos produtos[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model produtos_tipos {
+  id       Int        @id @default(autoincrement())
+  nome     String     @unique @db.VarChar(20)
+  sigla    String     @unique @db.Char(1)
+
+  produtos produtos[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model situacoes {
+  id_bling  BigInt   @id
+
+  id_modulo BigInt
+  modulos   modulos  @relation(fields: [id_modulo], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  nome      String   @db.VarChar(45)
+  cor       String   @db.VarChar(7)
+
+  vendas    vendas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tipos_pagamento {
+  id               Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(63)
+
+  formas_pagamento formas_pagamento[]
+}
+
+model transporte_etiqueta {
+  id          Int       @id @default(autoincrement())
+  nome        String?   @db.VarChar(63)
+
+  id_endereco Int
+  enderecos   enderecos @relation(fields: [id_endereco], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  vendas      vendas[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model transporte_frete_por_conta_de {
+  id     Int      @id @default(autoincrement())
+  nome   String   @db.VarChar(63)
+
+  vendas vendas[]
+}
+
+model transporte_volumes {
+  id_bling            BigInt  @id
+
+  id_venda            BigInt
+  vendas              vendas  @relation(fields: [id_venda], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  servico             String? @db.VarChar(45)
+  codigo_rastreamento String? @db.VarChar(45)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vendas {
+  id_bling                                        BigInt                        @id
+  numero                                          Int
+  numero_loja                                     String?                       @db.VarChar(45)
+  data                                            DateTime                      @default(now()) @db.Timestamptz(6)
+  data_saida                                      DateTime?                     @default(now()) @db.Date
+  data_prevista                                   DateTime?                     @db.Date
+
+  id_contato                                      BigInt
+  contatos_vendas_id_contatoTocontatos            contatos                      @relation("vendas_id_contatoTocontatos", fields: [id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_situacao                                     BigInt
+  situacoes                                       situacoes                     @relation(fields: [id_situacao], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  situacao_valor                                  Int
+  id_loja                                         Int
+  numero_pedido_compra                            String?                       @db.VarChar(45)
+  outras_despesas                                 Int
+  observacoes                                     String?
+  observacoes_internas                            String?
+  desconto                                        Int
+  desconto_unidade                                String                        @db.VarChar(12)
+
+  id_categoria                                    BigInt?
+  categorias_receitas_despesas                    categorias_receitas_despesas? @relation(fields: [id_categoria], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_nota_fiscal                                  BigInt?
+
+  total_icms                                      Int?
+  total_ipi                                       Int?
+
+  id_vendedor                                     BigInt?
+  vendedores                                      vendedores?                   @relation(fields: [id_vendedor], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  transporte_id_frete_por_conta                   Int
+  transporte_frete_por_conta_de                   transporte_frete_por_conta_de @relation(fields: [transporte_id_frete_por_conta], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  transporte_valor_frete                          Int
+  transporte_quantidade_volumes                   Int?
+  transporte_peso_bruto                           Int?
+  transporte_prazo_entrega                        Int?
+
+  transporte_id_contato                           BigInt?
+  contatos_vendas_transporte_id_contatoTocontatos contatos?                     @relation("vendas_transporte_id_contatoTocontatos", fields: [transporte_id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  transporte_id_etiqueta                          Int?
+  transporte_etiqueta                             transporte_etiqueta?          @relation(fields: [transporte_id_etiqueta], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  parcelas                                        parcelas[]
+  transporte_volumes                              transporte_volumes[]
+  vendas_itens_produtos                           vendas_itens_produtos[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vendas_itens_produtos {
+  id_bling   BigInt    @id
+
+  id_venda   BigInt
+  vendas     vendas    @relation(fields: [id_venda], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_produto BigInt?
+  produtos   produtos? @relation(fields: [id_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  desconto   Int
+  valor      Int
+  quantidade Int
+}
+
+model vendedores {
+  id_bling                  BigInt                     @id
+  desconto_limite           Int
+  id_loja                   Int
+  comissoes_desconto_maximo Int
+  comissoes_aliquota        Int
+
+  id_contato                BigInt
+  contatos                  contatos                   @relation(fields: [id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  contas_receitas_despesas  contas_receitas_despesas[]
+  vendas                    vendas[]
+}
