@@ -1,16 +1,17 @@
 import express from "express";
-import chalk from "chalk";
+import "express-async-errors";
+import cors from "cors";
 
 import { convertCLTToPJ } from "./controllers/calculator-controller";
-const server = express()
 
-server.get("/", (req, res) => {
-    res.send("ok")
-})
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-server.get("/calculator", convertCLTToPJ)
-
-const PORT = 4000
-server.listen(PORT, () => {
-  console.log(chalk.blackBright(`Server is listening on port ${PORT}.`));
+app.get("/", (_req, res) => {
+    res.send("oiiii");
 });
+
+app.get("/calculator", convertCLTToPJ);
+
+export default app;
