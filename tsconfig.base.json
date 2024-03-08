@@ -1,14 +1,3 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"]
-    },
-    "plugins": [
-      {
-        "transform": "typescript-transform-paths"
-      }
-    ]
-  }
+  "extends": "@tsconfig/node20/tsconfig.json"
 }

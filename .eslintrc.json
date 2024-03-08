@@ -40,11 +40,7 @@
         "project": "./tsconfig.eslint.json"
     },
     "rules": {
-        "import/no-extraneous-dependencies": [2, { "devDependencies": ["**/test.tsx", "**/test.ts"] }],
-        "import/extensions": [
-            "error",
-            "never" // Esta configuração proibe extensões nos imports
-        ]
+        "import/no-extraneous-dependencies": [2, { "devDependencies": ["**/test.tsx", "**/test.ts"] }]
         // "import/no-unresolved": "error"
     }
 }
