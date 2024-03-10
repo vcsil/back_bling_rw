@@ -3,6 +3,7 @@ import "express-async-errors";
 import cors from "cors";
 
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware";
+import "./utils/bigIntJSON";
 import router from "./routers/router";
 
 const app = express();
