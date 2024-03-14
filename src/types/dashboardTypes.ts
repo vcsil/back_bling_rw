@@ -4,4 +4,8 @@ type MainCardsReturn = {
     percent: number;
 };
 
-export { MainCardsReturn };
+type OrderSituationsT = {
+    id: bigint;
+    nome: string;
+};
+

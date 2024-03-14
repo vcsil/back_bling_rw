@@ -1,9 +1,16 @@
 import { Request, Response } from "express";
 
-import { DateRangesStringT } from "../types/utilsTypes";
+import * as orderSituationsService from "../services/dashboard-services/orderSituationsServices";
 import * as mainCardsService from "../services/dashboard-services/mainCardsServices";
+import { DateRangesStringT } from "../types/utilsTypes";
 
-export default async function mainCards(req: Request, res: Response) {
+export async function orderSituations(_req: Request, res: Response) {
+    const situations = await orderSituationsService.getOrderSituations();
+
+    res.send(situations);
+}
+
+export async function mainCards(req: Request, res: Response) {
     const { main, compare } = req.body as DateRangesStringT;
 
     const mainDates = mainCardsService.checksDates(main);
