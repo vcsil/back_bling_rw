@@ -1,4 +1,4 @@
-type MainCardsReturn = {
+type MainCardsReturnT = {
     amount: number;
     oldAmount: number;
     percent: number;
@@ -9,3 +9,4 @@ type OrderSituationsT = {
     nome: string;
 };
 
+export { MainCardsReturnT, OrderSituationsT };

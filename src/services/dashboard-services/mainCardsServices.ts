@@ -1,6 +1,6 @@
-import { DateRangeT, DateRangeStringT, DateRangesT } from "../../types/utilsTypes";
 import * as mainCardsRepositories from "../../repositories/dashboardRepositories/mainCardsRepositories";
-import { MainCardsReturn } from "../../types/dashboardTypes";
+import { DateRangeT, DateRangeStringT, DateRangesT } from "../../types/utilsTypes";
+import { MainCardsReturnT } from "../../types/dashboardTypes";
 
 function checksDates(rangeDate: DateRangeStringT): DateRangeT {
     const newFrom = new Date(rangeDate.from);
@@ -13,7 +13,7 @@ function checksDates(rangeDate: DateRangeStringT): DateRangeT {
     return dates;
 }
 
-async function salesOrdersInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturn> {
+async function salesOrdersInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturnT> {
     const totalMain = await mainCardsRepositories.numberSalesInPeriod(dateRangeMain);
     const totalCompare = await mainCardsRepositories.numberSalesInPeriod(dateRangeCompare);
     const percent = totalMain / totalCompare - 1;
@@ -21,7 +21,7 @@ async function salesOrdersInPeriod({ main: dateRangeMain, compare: dateRangeComp
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
 
-async function productsSoldInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturn> {
+async function productsSoldInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturnT> {
     const totalMain = (await mainCardsRepositories.numberProductsSoldInPeriod(dateRangeMain)) ?? 0;
     const totalCompare = (await mainCardsRepositories.numberProductsSoldInPeriod(dateRangeCompare)) ?? 0;
     const percent = (totalMain ?? 0) / (totalCompare ?? 0) - 1;
@@ -29,7 +29,7 @@ async function productsSoldInPeriod({ main: dateRangeMain, compare: dateRangeCom
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
 
-async function amountInvoicedInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturn> {
+async function amountInvoicedInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturnT> {
     const totalMain = await mainCardsRepositories.totalAmountInvoicedInPeriod(dateRangeMain);
     const totalCompare = await mainCardsRepositories.totalAmountInvoicedInPeriod(dateRangeCompare);
     const percent = totalMain / totalCompare - 1;
@@ -37,7 +37,7 @@ async function amountInvoicedInPeriod({ main: dateRangeMain, compare: dateRangeC
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
 
-function avarageTicketInPeriod(salesOrdersQuantity: MainCardsReturn, amountInvoiced: MainCardsReturn): MainCardsReturn {
+function avarageTicketInPeriod(salesOrdersQuantity: MainCardsReturnT, amountInvoiced: MainCardsReturnT): MainCardsReturnT {
     const totalMain = Math.round(amountInvoiced.amount / salesOrdersQuantity.amount);
     const totalCompare = Math.round(amountInvoiced.oldAmount / salesOrdersQuantity.oldAmount);
     const percent = totalMain / totalCompare - 1;
