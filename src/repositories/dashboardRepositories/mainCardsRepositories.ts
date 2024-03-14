@@ -2,7 +2,7 @@ import prisma from "../../database/database";
 import { DateRangeT } from "../../types/utilsTypes";
 
 async function numberSalesInPeriod(rangeDate: DateRangeT): Promise<number> {
-    const totalSales = await prisma.vendas.count({
+    return prisma.vendas.count({
         where: {
             data: {
                 gte: rangeDate.from,
@@ -10,7 +10,6 @@ async function numberSalesInPeriod(rangeDate: DateRangeT): Promise<number> {
             },
         },
     });
-    return totalSales;
 }
 
 async function numberProductsSoldInPeriod(rangeDate: DateRangeT): Promise<number | null> {
