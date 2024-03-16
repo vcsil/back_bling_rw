@@ -8,6 +8,7 @@ async function getAllOrderSituations(): Promise<OrderSituationsT[]> {
             nome 
         FROM situacoes
         WHERE id_modulo=98310
+        ORDER BY nome
     `;
 }
 
