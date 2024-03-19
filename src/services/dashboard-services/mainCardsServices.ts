@@ -16,7 +16,7 @@ function checksDates(rangeDate: DateRangeStringT): DateRangeT {
 async function salesOrdersInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturnT> {
     const totalMain = await mainCardsRepositories.numberSalesInPeriod(dateRangeMain);
     const totalCompare = await mainCardsRepositories.numberSalesInPeriod(dateRangeCompare);
-    const percent = totalMain / totalCompare - 1;
+    const percent = Math.round((totalMain / totalCompare - 1) * 10000);
 
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
@@ -24,7 +24,7 @@ async function salesOrdersInPeriod({ main: dateRangeMain, compare: dateRangeComp
 async function productsSoldInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturnT> {
     const totalMain = (await mainCardsRepositories.numberProductsSoldInPeriod(dateRangeMain)) ?? 0;
     const totalCompare = (await mainCardsRepositories.numberProductsSoldInPeriod(dateRangeCompare)) ?? 0;
-    const percent = (totalMain ?? 0) / (totalCompare ?? 0) - 1;
+    const percent = Math.round((totalMain / totalCompare - 1) * 10000);
 
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
@@ -32,7 +32,7 @@ async function productsSoldInPeriod({ main: dateRangeMain, compare: dateRangeCom
 async function amountInvoicedInPeriod({ main: dateRangeMain, compare: dateRangeCompare }: DateRangesT): Promise<MainCardsReturnT> {
     const totalMain = await mainCardsRepositories.totalAmountInvoicedInPeriod(dateRangeMain);
     const totalCompare = await mainCardsRepositories.totalAmountInvoicedInPeriod(dateRangeCompare);
-    const percent = totalMain / totalCompare - 1;
+    const percent = Math.round((totalMain / totalCompare - 1) * 10000);
 
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
@@ -40,7 +40,7 @@ async function amountInvoicedInPeriod({ main: dateRangeMain, compare: dateRangeC
 function avarageTicketInPeriod(salesOrdersQuantity: MainCardsReturnT, amountInvoiced: MainCardsReturnT): MainCardsReturnT {
     const totalMain = Math.round(amountInvoiced.amount / salesOrdersQuantity.amount);
     const totalCompare = Math.round(amountInvoiced.oldAmount / salesOrdersQuantity.oldAmount);
-    const percent = totalMain / totalCompare - 1;
+    const percent = Math.round((totalMain / totalCompare - 1) * 10000);
 
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
