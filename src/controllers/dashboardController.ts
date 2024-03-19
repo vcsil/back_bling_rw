@@ -11,7 +11,10 @@ export async function orderSituations(_req: Request, res: Response) {
 }
 
 export async function mainCards(req: Request, res: Response) {
-    const { main, compare } = req.body as DateRangesStringT;
+    const { mainDateFrom, mainDateTo, compareDateFrom, compareDateTo } = req.query as DateRangesStringT;
+
+    const main = { from: mainDateFrom, to: mainDateTo };
+    const compare = { from: compareDateFrom, to: compareDateTo };
 
     const mainDates = mainCardsService.checksDates(main);
     const compareDates = mainCardsService.checksDates(compare);

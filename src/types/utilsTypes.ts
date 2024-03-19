@@ -8,12 +8,14 @@ export type DateRangesT = {
     compare: DateRangeT;
 };
 
+export type DateRangesStringT = {
+    mainDateFrom: string;
+    mainDateTo: string;
+    compareDateFrom: string;
+    compareDateTo: string;
+};
+
 export type DateRangeStringT = {
     from: string;
     to: string;
-};
-
-export type DateRangesStringT = {
-    main: DateRangeStringT;
-    compare: DateRangeStringT;
 };

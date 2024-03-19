@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ObjectSchema } from "joi";
 import { MyCustomError, wrongSchemaError } from "../utils/errorUtils";
 
-type ReqHTTPTypes = "headers" | "body";
+type ReqHTTPTypes = "headers" | "body" | "query";
 
 type ParameterHeaderTypes = "x-api-key" | "authorization";
 

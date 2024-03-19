@@ -6,7 +6,7 @@ import { mainCards, orderSituations } from "../controllers/dashboardController";
 
 const dashboardRouter = Router();
 
-dashboardRouter.get("/main-cards", validateSchema(dateRangesMainCompareSchema, "body"), mainCards);
+dashboardRouter.get("/main-cards", validateSchema(dateRangesMainCompareSchema, "query"), mainCards);
 dashboardRouter.get("/situations", orderSituations);
 
 export default dashboardRouter;
