@@ -71,7 +71,7 @@ async function totalAmountInvoicedInPeriod(rangeDate: DateRangeT): Promise<numbe
         )
         +
         (
-            SELECT COALESCE(SUM(outras_despesas)*100 , 0) AS outros_custos
+            SELECT COALESCE(SUM(outras_despesas) , 0) AS outros_custos
             FROM vendas
             WHERE vendas.data BETWEEN ${rangeDate.from} AND ${rangeDate.to}
             AND vendas.id_situacao = 9
