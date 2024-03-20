@@ -13,9 +13,8 @@ function checksDates(rangeDate: DateRangeStringT): DateRangeT {
     return dates;
 }
 
-function formatSituationsArray(situationsString: string): number[] {
-    const situationsArray: string[] = JSON.parse(situationsString);
-    const situations = situationsArray.map((id) => parseInt(id, 10));
+function formatSituationsArray(situationsString: string[]): number[] {
+    const situations = situationsString.map((id) => parseInt(id, 10));
     return situations;
 }
 

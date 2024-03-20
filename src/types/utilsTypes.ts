@@ -14,7 +14,7 @@ export type MainCardsQueryParams = {
     mainDateTo: string;
     compareDateFrom: string;
     compareDateTo: string;
-    situationsSales: string;
+    situationsSales: string[];
 };
 
 export type DateRangeStringT = {
