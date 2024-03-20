@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import * as orderSituationsService from "../services/dashboard-services/orderSituationsServices";
 import * as mainCardsService from "../services/dashboard-services/mainCardsServices";
-import { DateRangesStringT } from "../types/utilsTypes";
+import { MainCardsQueryParams } from "../types/utilsTypes";
 
 export async function orderSituations(_req: Request, res: Response) {
     const situations = await orderSituationsService.getOrderSituations();
@@ -11,17 +11,20 @@ export async function orderSituations(_req: Request, res: Response) {
 }
 
 export async function mainCards(req: Request, res: Response) {
-    const { mainDateFrom, mainDateTo, compareDateFrom, compareDateTo } = req.query as DateRangesStringT;
+    const { mainDateFrom, mainDateTo, compareDateFrom, compareDateTo, situationsSales } = req.query as MainCardsQueryParams;
 
-    const main = { from: mainDateFrom, to: mainDateTo };
-    const compare = { from: compareDateFrom, to: compareDateTo };
+    const mainDates = mainCardsService.checksDates({ from: mainDateFrom, to: mainDateTo });
+    const compareDates = mainCardsService.checksDates({ from: compareDateFrom, to: compareDateTo });
+    const situationsSalesNumber = mainCardsService.formatSituationsArray(situationsSales);
 
-    const mainDates = mainCardsService.checksDates(main);
-    const compareDates = mainCardsService.checksDates(compare);
-
-    const salesOrdersQuantity = await mainCardsService.salesOrdersInPeriod({ main: mainDates, compare: compareDates });
-    const productsSoldQuantity = await mainCardsService.productsSoldInPeriod({ main: mainDates, compare: compareDates });
-    const amountInvoiced = await mainCardsService.amountInvoicedInPeriod({ main: mainDates, compare: compareDates });
+    const serviceProps = {
+        main: mainDates,
+        compare: compareDates,
+        situationsSales: situationsSalesNumber,
+    };
+    const salesOrdersQuantity = await mainCardsService.salesOrdersInPeriod(serviceProps);
+    const productsSoldQuantity = await mainCardsService.productsSoldInPeriod(serviceProps);
+    const amountInvoiced = await mainCardsService.amountInvoicedInPeriod(serviceProps);
     const averageTicket = mainCardsService.avarageTicketInPeriod(salesOrdersQuantity, amountInvoiced);
 
     res.send({ salesOrdersQuantity, productsSoldQuantity, amountInvoiced, averageTicket });

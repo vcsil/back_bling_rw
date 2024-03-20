@@ -3,16 +3,18 @@ export type DateRangeT = {
     to: Date;
 };
 
-export type DateRangesT = {
+export type DateRangesSituationsT = {
     main: DateRangeT;
     compare: DateRangeT;
+    situationsSales: number[];
 };
 
-export type DateRangesStringT = {
+export type MainCardsQueryParams = {
     mainDateFrom: string;
     mainDateTo: string;
     compareDateFrom: string;
     compareDateTo: string;
+    situationsSales: string;
 };
 
 export type DateRangeStringT = {

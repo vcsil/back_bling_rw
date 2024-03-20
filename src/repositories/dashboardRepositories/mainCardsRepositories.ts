@@ -1,18 +1,21 @@
 import prisma from "../../database/database";
 import { DateRangeT } from "../../types/utilsTypes";
 
-async function numberSalesInPeriod(rangeDate: DateRangeT): Promise<number> {
+async function numberSalesInPeriod(rangeDate: DateRangeT, situationsSales: number[]): Promise<number> {
     return prisma.vendas.count({
         where: {
             data: {
                 gte: rangeDate.from,
                 lte: rangeDate.to,
             },
+            id_situacao: {
+                in: situationsSales,
+            },
         },
     });
 }
 
-async function numberProductsSoldInPeriod(rangeDate: DateRangeT): Promise<number | null> {
+async function numberProductsSoldInPeriod(rangeDate: DateRangeT, situationsSales: number[]): Promise<number | null> {
     const { _sum: totalProducts } = await prisma.vendas_itens_produtos.aggregate({
         _sum: {
             quantidade: true,
@@ -23,7 +26,9 @@ async function numberProductsSoldInPeriod(rangeDate: DateRangeT): Promise<number
                     gte: rangeDate.from,
                     lte: rangeDate.to,
                 },
-                id_situacao: 9,
+                id_situacao: {
+                    in: situationsSales,
+                },
             },
         },
     });
@@ -31,7 +36,7 @@ async function numberProductsSoldInPeriod(rangeDate: DateRangeT): Promise<number
     return totalProducts.quantidade;
 }
 
-async function totalAmountInvoicedInPeriod(rangeDate: DateRangeT): Promise<number> {
+async function totalAmountInvoicedInPeriod(rangeDate: DateRangeT, situationsSales: number[]): Promise<number> {
     const valueQuantities = await prisma.$queryRaw<{ soma_total: number }[]>`
         SELECT 
         (
@@ -41,7 +46,7 @@ async function totalAmountInvoicedInPeriod(rangeDate: DateRangeT): Promise<numbe
                 vendas AS v ON vip.id_venda = v.id_bling
             WHERE 
                 v.data BETWEEN ${rangeDate.from} AND ${rangeDate.to}
-            AND v.id_situacao = 9
+            AND v.id_situacao = ANY(${situationsSales})
         )
         -
         (
@@ -50,7 +55,7 @@ async function totalAmountInvoicedInPeriod(rangeDate: DateRangeT): Promise<numbe
             JOIN vendedores ON vendedores.id_bling = vendas.id_vendedor
             JOIN contatos ON contatos.id_bling = vendedores.id_contato
             WHERE data BETWEEN ${rangeDate.from} AND ${rangeDate.to}
-                AND vendas.id_situacao = 9
+                AND vendas.id_situacao = ANY(${situationsSales})
                 AND vendas.desconto_unidade = 'REAL'
         ) 
         - 
@@ -65,7 +70,7 @@ async function totalAmountInvoicedInPeriod(rangeDate: DateRangeT): Promise<numbe
                 WHERE v.data BETWEEN ${rangeDate.from} AND ${rangeDate.to}
                     AND v.desconto_unidade = 'PERCENTUAL'
                     AND v.desconto > 0
-                    AND v.id_situacao = 9
+                    AND v.id_situacao = ANY(${situationsSales})
                 GROUP BY v.desconto
             ) AS subquery
         )
@@ -74,7 +79,7 @@ async function totalAmountInvoicedInPeriod(rangeDate: DateRangeT): Promise<numbe
             SELECT COALESCE(SUM(outras_despesas) , 0) AS outros_custos
             FROM vendas
             WHERE vendas.data BETWEEN ${rangeDate.from} AND ${rangeDate.to}
-            AND vendas.id_situacao = 9
+            AND vendas.id_situacao = ANY(${situationsSales})
         )
         AS soma_total;
         `;
