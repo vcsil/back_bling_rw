@@ -9,4 +9,9 @@ type OrderSituationsT = {
     nome: string;
 };
 
-export { MainCardsReturnT, OrderSituationsT };
+type LastUpdateTime = {
+    id: number;
+    datetime: Date;
+};
+
+export { MainCardsReturnT, OrderSituationsT, LastUpdateTime };
