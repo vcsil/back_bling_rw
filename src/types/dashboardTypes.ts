@@ -14,4 +14,10 @@ type LastUpdateTime = {
     datetime: Date;
 };
 
-export { MainCardsReturnT, OrderSituationsT, LastUpdateTime };
+type BlingStatus = {
+    nome: string;
+    cor: string;
+    total: string;
+};
+
+export { MainCardsReturnT, OrderSituationsT, LastUpdateTime, BlingStatus };

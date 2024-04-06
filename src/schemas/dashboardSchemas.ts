@@ -1,6 +1,6 @@
 import joi from "joi";
 
-import { MainCardsQueryParams } from "../types/utilsTypes";
+import { DateRangeT, MainCardsQueryParams } from "../types/utilsTypes";
 
 const dateFormatRegex = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -14,4 +14,9 @@ const dateRangesMainCompareSchema = joi.object<MainCardsQueryParams>({
     situationsSales: joi.array().items(joi.string()).required(),
 });
 
-export default dateRangesMainCompareSchema;
+const dateRangeSchema = joi.object<DateRangeT>({
+    from: dateSchema.required(),
+    to: dateSchema.required(),
+});
+
+export { dateRangesMainCompareSchema, dateRangeSchema };
