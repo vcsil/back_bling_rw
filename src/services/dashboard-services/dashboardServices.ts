@@ -16,4 +16,10 @@ async function blingOrderStatusPerPeriod(rangeDate: DateRangeT) {
     return { blingOrderStatus, total: totalOrders };
 }
 
-export { lastUpdateTime, blingOrderStatusPerPeriod };
+async function salesPerDayInPeriod(rangeDate: DateRangeT, situationsSalesNumber: number[]) {
+    const sales = await dashboardRepositories.getSalesPerDayInPeriod(rangeDate, situationsSalesNumber);
+
+    return sales;
+}
+
+export { lastUpdateTime, blingOrderStatusPerPeriod, salesPerDayInPeriod };

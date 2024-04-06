@@ -20,4 +20,9 @@ type BlingStatus = {
     total: string;
 };
 
-export { MainCardsReturnT, OrderSituationsT, LastUpdateTime, BlingStatus };
+type SalesPerDayInPeriodT = {
+    dia: Date;
+    total_vendas: number;
+};
+
+export { MainCardsReturnT, OrderSituationsT, LastUpdateTime, BlingStatus, SalesPerDayInPeriodT };

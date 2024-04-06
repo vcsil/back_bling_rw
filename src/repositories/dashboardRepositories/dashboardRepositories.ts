@@ -1,6 +1,6 @@
 import prisma from "../../database/database";
 
-import { LastUpdateTime, BlingStatus } from "../../types/dashboardTypes";
+import { LastUpdateTime, BlingStatus, SalesPerDayInPeriodT } from "../../types/dashboardTypes";
 import { DateRangeT } from "../../types/utilsTypes";
 
 async function getLastUpdateTime(): Promise<LastUpdateTime | null> {
@@ -27,4 +27,27 @@ async function getBlingStatus(rangeDate: DateRangeT): Promise<BlingStatus[]> {
     return blingOrderStatus;
 }
 
-export { getLastUpdateTime, getBlingStatus };
+async function getSalesPerDayInPeriod(rangeDate: DateRangeT, situationsSales: number[]): Promise<SalesPerDayInPeriodT[]> {
+    const selesPerDay = prisma.$queryRaw<SalesPerDayInPeriodT[]>`
+        SELECT
+            calendar.day AS "date",
+            COUNT(vendas.id_bling) AS "value"
+        FROM 
+            (
+                SELECT generate_series(
+                    ${rangeDate.from}::date, ${rangeDate.to}::date, '1 day'
+                ) AS day
+            ) calendar
+        LEFT JOIN 
+            vendas ON DATE_TRUNC('day', vendas.data) = calendar.day
+        WHERE vendas.id_situacao = ANY(${situationsSales})
+        GROUP BY 
+            calendar.day
+        ORDER BY 
+            calendar.day;
+
+    `;
+    return selesPerDay;
+}
+
+export { getLastUpdateTime, getBlingStatus, getSalesPerDayInPeriod };

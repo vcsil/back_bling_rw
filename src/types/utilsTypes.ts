@@ -21,3 +21,9 @@ export type DateRangeStringT = {
     from: string;
     to: string;
 };
+
+export type OrderSalesInPeriodQueryParams = {
+    from: string;
+    to: string;
+    situationsSales: string[];
+};

@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import * as orderSituationsService from "../services/dashboard-services/orderSituationsServices";
 import * as mainCardsService from "../services/dashboard-services/mainCardsServices";
 import * as dashboardService from "../services/dashboard-services/dashboardServices";
-import { MainCardsQueryParams, DateRangeT } from "../types/utilsTypes";
+import { MainCardsQueryParams, DateRangeT, OrderSalesInPeriodQueryParams } from "../types/utilsTypes";
 
 export async function orderSituations(_req: Request, res: Response) {
     const situations = await orderSituationsService.getOrderSituations();
@@ -42,6 +42,17 @@ export async function orderStatus(req: Request, res: Response) {
 
     const rangeDate: DateRangeT = mainCardsService.checksDates({ from, to });
     const blingOrderStatus = await dashboardService.blingOrderStatusPerPeriod(rangeDate);
+
+    res.send(blingOrderStatus);
+}
+
+export async function orderSalesInPeriod(req: Request, res: Response) {
+    const { from, to, situationsSales } = req.query as OrderSalesInPeriodQueryParams;
+
+    const rangeDate: DateRangeT = mainCardsService.checksDates({ from, to });
+    const situationsSalesNumber = mainCardsService.formatSituationsArray(situationsSales);
+
+    const blingOrderStatus = await dashboardService.salesPerDayInPeriod(rangeDate, situationsSalesNumber);
 
     res.send(blingOrderStatus);
 }
