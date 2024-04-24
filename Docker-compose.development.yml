@@ -1,0 +1,21 @@
+services:
+  rw_back:
+    container_name: rw_back
+    build:
+      context: .
+      dockerfile: Dockerfile.development
+    env_file:
+      - .env
+    ports:
+      - 4000:4000
+    working_dir: /usr/src/back
+    command: bash -c "npx prisma generate && npm run dev"
+    volumes:
+      - .:/usr/src/back
+    networks:
+      - rw_network
+
+networks:
+      rw_network:
+        external: true
+

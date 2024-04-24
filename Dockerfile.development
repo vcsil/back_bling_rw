@@ -1,0 +1,15 @@
+FROM node:20.11.1-alpine3.19
+
+RUN apk add git nano
+
+WORKDIR /usr/src/back
+
+COPY ./package*.json ./
+
+COPY ./prisma ./prisma
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 4000
