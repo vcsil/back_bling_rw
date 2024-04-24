@@ -1,6 +1,7 @@
 services:
   rw_back:
     container_name: rw_back
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.development
