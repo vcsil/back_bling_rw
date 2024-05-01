@@ -1,15 +1,23 @@
 import * as mainCardsRepositories from "../../repositories/dashboardRepositories/mainCardsRepositories";
 import { DateRangeT, DateRangeStringT, DateRangesSituationsT } from "../../types/utilsTypes";
 import { MainCardsReturnT } from "../../types/dashboardTypes";
+import { addMinutes } from "../utils";
 
 function checksDates(rangeDate: DateRangeStringT): DateRangeT {
     const newFrom = new Date(rangeDate.from);
     const newTo = new Date(rangeDate.to);
 
-    newFrom.setUTCHours(0, 0, 0, 0);
-    newTo.setUTCHours(23, 59, 59, 999);
+    const timeZone = -3 * 60; // "America/Sao_Paulo";
 
-    const dates = { from: newFrom, to: newTo };
+    // Start of the day
+    newFrom.setUTCHours(0, 0, 0, 0);
+    const from = addMinutes(newFrom, -timeZone);
+
+    // End of the day
+    newTo.setUTCHours(23, 59, 59, 999);
+    const to = addMinutes(newTo, -timeZone);
+
+    const dates = { from, to };
     return dates;
 }
 
