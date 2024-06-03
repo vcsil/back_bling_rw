@@ -13,7 +13,7 @@ model categorias_receitas_despesas {
   id_bling                                                                                                                   BigInt                                 @id
   nome                                                                                                                       String                                 @db.VarChar(45)
 
-  id_tipo                                                                                                                    BigInt
+  id_tipo                                                                                                                    Int
   categorias_receitas_despesas_tipo                                                                                          categorias_receitas_despesas_tipo      @relation(fields: [id_tipo], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   situacao                                                                                                                   Boolean
@@ -22,6 +22,7 @@ model categorias_receitas_despesas {
   categorias_receitas_despesas_relacao_categorias_receitas_despesas_relacao_id_categoria_paiTocategorias_receitas_despesas   categorias_receitas_despesas_relacao[] @relation("categorias_receitas_despesas_relacao_id_categoria_paiTocategorias_receitas_despesas")
   contas_receitas_despesas                                                                                                   contas_receitas_despesas[]
   vendas                                                                                                                     vendas[]
+  borderos                                                                                                                   borderos[]
 }
 
 model categorias_receitas_despesas_relacao {
@@ -37,7 +38,7 @@ model categorias_receitas_despesas_relacao {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model categorias_receitas_despesas_tipo {
-  id                           BigInt                         @id
+  id                           Int                            @id
   nome                         String                         @db.VarChar(25)
 
   categorias_receitas_despesas categorias_receitas_despesas[]
@@ -48,6 +49,7 @@ model contas_contabeis {
   id_bling                 BigInt                     @id
   nome                     String                     @db.VarChar(45)
 
+  borderos                 borderos[]
   contas_receitas_despesas contas_receitas_despesas[]
 }
 
@@ -61,6 +63,10 @@ model contas_receitas_despesas {
 
   vencimento                   DateTime                     @db.Date
   valor                        Int
+  id_transacao                 String?                      @db.VarChar(63)
+  link_qr_code_pix             String?
+  link_boleto                  String?
+  data_emissao                 DateTime                     @default(now()) @db.Date
 
   id_contato                   BigInt
   contatos                     contatos                     @relation(fields: [id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
@@ -69,7 +75,6 @@ model contas_receitas_despesas {
   formas_pagamento             formas_pagamento?            @relation(fields: [id_forma_pagamento], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
 
   saldo                        Int
-  data_emissao                 DateTime                     @default(now()) @db.Date
   vencimento_original          DateTime                     @default(now()) @db.Date
   numero_documento             String?                      @db.VarChar(63)
   competencia                  DateTime                     @db.Date
@@ -85,8 +90,6 @@ model contas_receitas_despesas {
   id_vendedor                  BigInt?
   vendedores                   vendedores?                  @relation(fields: [id_vendedor], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
 
-  id_bordero                   BigInt?
-
   id_tipo_ocorrencia           Int?
   contas_tipo_ocorrencia       contas_tipo_ocorrencia?      @relation(fields: [id_tipo_ocorrencia], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -94,7 +97,10 @@ model contas_receitas_despesas {
   dia_vencimento               DateTime?                    @default(now()) @db.Date
   numero_parcelas              Int?
   data_limite                  DateTime?                    @default(now()) @db.Date
+  alterado_em                  DateTime?                    @default(now()) @db.Timestamptz(6)
 
+  contas_borderos_relacao      contas_borderos_relacao[]
+  contas_origens               contas_origens[]
   parcelas                     parcelas[]
 }
 
@@ -138,7 +144,7 @@ model contatos {
   id_indicador_inscricao_estadual               Int
   contatos_indicador_inscricao_estadual         contatos_indicador_inscricao_estadual @relation(fields: [id_indicador_inscricao_estadual], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  inscricao_estadual                            String?                               @db.VarChar(12)
+  inscricao_estadual                            String?                               @db.VarChar(13)
   rg                                            String?                               @db.VarChar(10)
   orgao_emissor                                 String?                               @db.VarChar(55)
   email                                         String?                               @db.VarChar(255)
@@ -153,6 +159,7 @@ model contatos {
 
   contas_receitas_despesas                      contas_receitas_despesas[]
   contatos_enderecos                            contatos_enderecos[]
+  pagamentos                                    pagamentos[]
   produto_fornecedor                            produto_fornecedor[]
   vendas_vendas_id_contatoTocontatos            vendas[]                              @relation("vendas_id_contatoTocontatos")
   vendas_vendas_transporte_id_contatoTocontatos vendas[]                              @relation("vendas_transporte_id_contatoTocontatos")
@@ -532,6 +539,7 @@ model produtos_estoques {
 
   saldo_fisico       Int
   saldo_virtual      Int
+  alterado_em        DateTime?          @default(now()) @db.Timestamptz(6)
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -665,7 +673,6 @@ model vendas {
   categorias_receitas_despesas                    categorias_receitas_despesas? @relation(fields: [id_categoria], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
 
   id_nota_fiscal                                  BigInt?
-
   total_icms                                      Int?
   total_ipi                                       Int?
 
@@ -686,10 +693,11 @@ model vendas {
   transporte_id_etiqueta                          Int?
   transporte_etiqueta                             transporte_etiqueta?          @relation(fields: [transporte_id_etiqueta], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
+  alterado_em                                     DateTime?                     @default(now()) @db.Timestamptz(6)
+
   parcelas                                        parcelas[]
   transporte_volumes                              transporte_volumes[]
   vendas_itens_produtos                           vendas_itens_produtos[]
-  alterado_em                                     DateTime?                     @default(now()) @db.Timestamptz(6)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -724,4 +732,71 @@ model vendedores {
 model atualizacoes_modulos {
   id       Int      @id @default(autoincrement())
   datetime DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model borderos {
+  id_bling                     BigInt                       @id
+  data                         DateTime                     @db.Date
+  historico                    String?
+
+  id_portador                  BigInt
+  contas_contabeis             contas_contabeis             @relation(fields: [id_portador], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_categoria_receita_despesa BigInt
+  categorias_receitas_despesas categorias_receitas_despesas @relation(fields: [id_categoria_receita_despesa], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  contas_borderos_relacao      contas_borderos_relacao[]
+  pagamentos                   pagamentos[]
+}
+
+model pagamentos {
+  id               Int      @id @default(autoincrement())
+
+  id_bordero       BigInt
+  borderos         borderos @relation(fields: [id_bordero], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_contato       BigInt
+  contatos         contatos @relation(fields: [id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  numero_documento String?  @db.VarChar(63)
+  valor_pago       Int
+  juros            Int
+  desconto         Int
+  acrescimo        Int
+  tarifa           Int
+}
+
+model contas_borderos_relacao {
+  id                       Int                      @id @default(autoincrement())
+
+  id_conta                 BigInt
+  contas_receitas_despesas contas_receitas_despesas @relation(fields: [id_conta], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_bordero               BigInt
+  borderos                 borderos                 @relation(fields: [id_bordero], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model contas_origem_situacoes {
+  id             Int              @id @default(autoincrement())
+  nome           String           @db.VarChar(31)
+
+  contas_origens contas_origens[]
+}
+
+model contas_origens {
+  id                       Int                      @id @default(autoincrement())
+  id_origem                BigInt
+
+  id_conta                 BigInt
+  contas_receitas_despesas contas_receitas_despesas @relation(fields: [id_conta], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  tipo_origem              String?                  @db.VarChar(63)
+  numero                   String?                  @db.VarChar(63)
+  data_emissao             DateTime?                @db.Date
+  valor                    Int
+
+  id_conta_origem_situacao Int
+  contas_origem_situacoes  contas_origem_situacoes  @relation(fields: [id_conta_origem_situacao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  url                      String?
 }
