@@ -3,7 +3,8 @@ import { Request, Response } from "express";
 import * as orderSituationsService from "../services/dashboard-services/orderSituationsServices";
 import * as mainCardsService from "../services/dashboard-services/mainCardsServices";
 import * as dashboardService from "../services/dashboard-services/dashboardServices";
-import { MainCardsQueryParams, DateRangeT, OrderSalesInPeriodQueryParams } from "../types/utilsTypes";
+import * as revenueCardsService from "../services/dashboard-services/revenueCardsServices";
+import { MainCardsQueryParams, DateRangeT, OrderSalesInPeriodQueryParams, RevenueQueryParams } from "../types/utilsTypes";
 
 export async function orderSituations(_req: Request, res: Response) {
     const situations = await orderSituationsService.getOrderSituations();
@@ -55,4 +56,21 @@ export async function orderSalesInPeriod(req: Request, res: Response) {
     const blingOrderStatus = await dashboardService.salesPerDayInPeriod(rangeDate, situationsSalesNumber);
 
     res.send(blingOrderStatus);
+}
+
+export async function revenueCards(req: Request, res: Response) {
+    const { mainDateFrom, mainDateTo, compareDateFrom, compareDateTo } = req.query as RevenueQueryParams;
+
+    const mainDates = mainCardsService.checksDates({ from: mainDateFrom, to: mainDateTo });
+    const compareDates = mainCardsService.checksDates({ from: compareDateFrom, to: compareDateTo });
+
+    const totalGifts = await revenueCardsService.giftPieces(mainDates, compareDates);
+    const totalStoreExpenses = await revenueCardsService.storeExpenses(mainDates, compareDates);
+    const totalGrossRevenue = await revenueCardsService.grossRevenue(mainDates, compareDates);
+    const markup = revenueCardsService.calculateMarkup(totalGifts, totalStoreExpenses, totalGrossRevenue);
+    const totalPersonalExpenses = await revenueCardsService.personalExpenses(mainDates, compareDates);
+
+    const revenueMetrics = [totalGifts, totalStoreExpenses, totalGrossRevenue, markup, totalPersonalExpenses];
+
+    res.send(revenueMetrics);
 }

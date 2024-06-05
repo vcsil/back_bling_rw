@@ -27,3 +27,10 @@ export type OrderSalesInPeriodQueryParams = {
     to: string;
     situationsSales: string[];
 };
+
+export type RevenueQueryParams = {
+    mainDateFrom: string;
+    mainDateTo: string;
+    compareDateFrom: string;
+    compareDateTo: string;
+};
