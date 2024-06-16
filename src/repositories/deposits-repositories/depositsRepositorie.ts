@@ -13,4 +13,16 @@ async function getDepositsActive(): Promise<DepositT[]> {
     });
 }
 
-export { getDepositsActive };
+async function getDepositById(idDeposit: number): Promise<{ id_bling: bigint } | null> {
+    return prisma.produtos_depositos.findUnique({
+        where: {
+            id_bling: idDeposit,
+            situacao: true,
+        },
+        select: {
+            id_bling: true,
+        },
+    });
+}
+
+export { getDepositsActive, getDepositById };

@@ -28,4 +28,16 @@ async function productsForBalance(idDeposit: number, codeProduct: string): Promi
     });
 }
 
-export { productsForBalance };
+async function getProductByCode(codeProduct: string): Promise<{ id_bling: bigint } | null> {
+    return prisma.produtos.findFirst({
+        where: {
+            codigo: codeProduct,
+            situacao_produto: "Ativo",
+        },
+        select: {
+            id_bling: true,
+        },
+    });
+}
+
+export { productsForBalance, getProductByCode };
