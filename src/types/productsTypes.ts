@@ -11,4 +11,9 @@ type ProductsBalance = {
     }[];
 };
 
-export { ProductsBalance };
+type ProductsBalanceParams = {
+    idDeposit: string;
+    codeProduct: string;
+};
+
+export { ProductsBalance, ProductsBalanceParams };
