@@ -5,9 +5,10 @@ export enum AppErrorTypesEnum {
     NOT_FOUND = "not_found",
     CONFLICT = "conflict",
     WRONG_SCHEMA = "wrong_schema",
+    INTERNAL_SERVER_ERROR = "internal_server_error",
 }
 
-type AppErrorTypes = "conflict" | "not_found" | "unauthorized" | "wrong_schema" | "bad_request" | "forbidden";
+type AppErrorTypes = "conflict" | "not_found" | "unauthorized" | "wrong_schema" | "bad_request" | "forbidden" | "internal_server_error";
 
 export interface AppError {
     type: AppErrorTypes;
@@ -40,8 +41,10 @@ export function errorTypeToStatusCode(type: AppErrorTypes): number {
             return 409;
         case AppErrorTypesEnum.WRONG_SCHEMA:
             return 422;
+        case AppErrorTypesEnum.INTERNAL_SERVER_ERROR:
+            return 500;
         default:
-            return 400;
+            return 500;
     }
 }
 
@@ -55,3 +58,4 @@ export const forbiddenError = (message?: string) => createAppError(AppErrorTypes
 export const notFoundError = (message?: string) => createAppError(AppErrorTypesEnum.NOT_FOUND, message);
 export const conflictError = (message?: string) => createAppError(AppErrorTypesEnum.CONFLICT, message);
 export const wrongSchemaError = (message?: string) => createAppError(AppErrorTypesEnum.WRONG_SCHEMA, message);
+export const internalServerError = (message?: string) => createAppError(AppErrorTypesEnum.INTERNAL_SERVER_ERROR, message);
