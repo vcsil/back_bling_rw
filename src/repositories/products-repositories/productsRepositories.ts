@@ -1,8 +1,8 @@
 import prisma from "../../database/database";
 import { ProductsBalance } from "../../types/productsTypes";
 
-async function productsForBalance(idDeposit: number, codeProduct: string): Promise<ProductsBalance | null> {
-    return prisma.produtos.findFirst({
+async function productsForBalance(idDeposit: number, codeProduct: string): Promise<ProductsBalance> {
+    return prisma.produtos.findFirstOrThrow({
         where: {
             codigo: codeProduct,
         },
