@@ -3,6 +3,7 @@ import joi from "joi";
 import { DateRangeT, MainCardsQueryParams, OrderSalesInPeriodQueryParams } from "../types/utilsTypes";
 
 const dateFormatRegex = /^\d{4}-\d{2}-\d{2}$/;
+const stringOfNumbeRegex = /^\d+$/;
 
 const dateSchema = joi.string().pattern(dateFormatRegex, { name: "dateSchema" });
 
@@ -11,7 +12,10 @@ const datesRangesSituationsSchema = joi.object<MainCardsQueryParams>({
     mainDateTo: dateSchema.required(),
     compareDateFrom: dateSchema.required(),
     compareDateTo: dateSchema.required(),
-    situationsSales: joi.array().items(joi.string()).required(),
+    situationsSales: joi
+        .array()
+        .items(joi.string().pattern(stringOfNumbeRegex, { name: "situationsSales" }))
+        .required(),
 });
 
 const dateRangeSchema = joi.object<DateRangeT>({
@@ -22,7 +26,10 @@ const dateRangeSchema = joi.object<DateRangeT>({
 const dateRangeSituationsSalesSchema = joi.object<OrderSalesInPeriodQueryParams>({
     from: dateSchema.required(),
     to: dateSchema.required(),
-    situationsSales: joi.array().items(joi.string()).required(),
+    situationsSales: joi
+        .array()
+        .items(joi.string().pattern(stringOfNumbeRegex, { name: "situationsSales" }))
+        .required(),
 });
 
 const datesRangesSchema = joi.object<MainCardsQueryParams>({
