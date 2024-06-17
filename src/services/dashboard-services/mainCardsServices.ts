@@ -1,25 +1,6 @@
 import * as mainCardsRepositories from "../../repositories/dashboardRepositories/mainCardsRepositories";
-import { DateRangeT, DateRangeStringT, DateRangesSituationsT } from "../../types/utilsTypes";
+import { DateRangesSituationsT } from "../../types/utilsTypes";
 import { MainCardsReturnT } from "../../types/dashboardTypes";
-import { addMinutes } from "../utils";
-
-function checksDates(rangeDate: DateRangeStringT): DateRangeT {
-    const newFrom = new Date(rangeDate.from);
-    const newTo = new Date(rangeDate.to);
-
-    const timeZone = -3 * 60; // "America/Sao_Paulo";
-
-    // Start of the day
-    newFrom.setUTCHours(0, 0, 0, 0);
-    const from = addMinutes(newFrom, -timeZone);
-
-    // End of the day
-    newTo.setUTCHours(23, 59, 59, 999);
-    const to = addMinutes(newTo, -timeZone);
-
-    const dates = { from, to };
-    return dates;
-}
 
 function formatSituationsArray(situationsString: string[]): number[] {
     const situations = situationsString.map((id) => parseInt(id, 10));
@@ -70,4 +51,4 @@ function avarageTicketInPeriod(salesOrdersQuantity: MainCardsReturnT, amountInvo
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
 
-export { checksDates, formatSituationsArray, salesOrdersInPeriod, productsSoldInPeriod, amountInvoicedInPeriod, avarageTicketInPeriod };
+export { formatSituationsArray, salesOrdersInPeriod, productsSoldInPeriod, amountInvoicedInPeriod, avarageTicketInPeriod };

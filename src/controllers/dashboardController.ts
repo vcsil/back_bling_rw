@@ -5,6 +5,7 @@ import * as mainCardsService from "../services/dashboard-services/mainCardsServi
 import * as dashboardService from "../services/dashboard-services/dashboardServices";
 import * as revenueCardsService from "../services/dashboard-services/revenueCardsServices";
 import { MainCardsQueryParams, DateRangeT, OrderSalesInPeriodQueryParams, RevenueQueryParams } from "../types/utilsTypes";
+import { checksDates } from "../services/utils";
 
 export async function orderSituations(_req: Request, res: Response) {
     const situations = await orderSituationsService.getOrderSituations();
@@ -15,8 +16,8 @@ export async function orderSituations(_req: Request, res: Response) {
 export async function mainCards(req: Request, res: Response) {
     const { mainDateFrom, mainDateTo, compareDateFrom, compareDateTo, situationsSales } = req.query as MainCardsQueryParams;
 
-    const mainDates = mainCardsService.checksDates({ from: mainDateFrom, to: mainDateTo });
-    const compareDates = mainCardsService.checksDates({ from: compareDateFrom, to: compareDateTo });
+    const mainDates = checksDates({ from: mainDateFrom, to: mainDateTo });
+    const compareDates = checksDates({ from: compareDateFrom, to: compareDateTo });
     const situationsSalesNumber = mainCardsService.formatSituationsArray(situationsSales);
 
     const serviceProps = {
@@ -41,7 +42,7 @@ export async function lastUpdateTime(_req: Request, res: Response) {
 export async function orderStatus(req: Request, res: Response) {
     const { from, to } = req.query as unknown as { from: string; to: string };
 
-    const rangeDate: DateRangeT = mainCardsService.checksDates({ from, to });
+    const rangeDate: DateRangeT = checksDates({ from, to });
     const blingOrderStatus = await dashboardService.blingOrderStatusPerPeriod(rangeDate);
 
     res.send(blingOrderStatus);
@@ -50,7 +51,7 @@ export async function orderStatus(req: Request, res: Response) {
 export async function orderSalesInPeriod(req: Request, res: Response) {
     const { from, to, situationsSales } = req.query as OrderSalesInPeriodQueryParams;
 
-    const rangeDate: DateRangeT = mainCardsService.checksDates({ from, to });
+    const rangeDate: DateRangeT = checksDates({ from, to });
     const situationsSalesNumber = mainCardsService.formatSituationsArray(situationsSales);
 
     const blingOrderStatus = await dashboardService.salesPerDayInPeriod(rangeDate, situationsSalesNumber);
@@ -61,8 +62,8 @@ export async function orderSalesInPeriod(req: Request, res: Response) {
 export async function revenueCards(req: Request, res: Response) {
     const { mainDateFrom, mainDateTo, compareDateFrom, compareDateTo } = req.query as RevenueQueryParams;
 
-    const mainDates = mainCardsService.checksDates({ from: mainDateFrom, to: mainDateTo });
-    const compareDates = mainCardsService.checksDates({ from: compareDateFrom, to: compareDateTo });
+    const mainDates = checksDates({ from: mainDateFrom, to: mainDateTo });
+    const compareDates = checksDates({ from: compareDateFrom, to: compareDateTo });
 
     const totalGifts = await revenueCardsService.giftPieces(mainDates, compareDates);
     const totalStoreExpenses = await revenueCardsService.storeExpenses(mainDates, compareDates);
