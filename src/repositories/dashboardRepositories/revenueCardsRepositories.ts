@@ -22,7 +22,7 @@ async function getTotalStoreExpenses(rangeDate: DateRangeT): Promise<{ storeExpe
         SELECT
                 CAST(SUM(p.valor_pago) AS INTEGER) AS "storeExpenses"
         FROM borderos AS b
-        LEFT JOIN
+        JOIN
             pagamentos AS "p" ON "p".id_bordero = b.id_bling
         WHERE
             b.data BETWEEN ${rangeDate.from} AND ${rangeDate.to}
@@ -48,7 +48,7 @@ async function getTotalRevenues(rangeDate: DateRangeT): Promise<{ revenueGross: 
         SELECT
                 CAST(SUM(p.valor_pago) AS INTEGER) AS "revenueGross"
         FROM borderos AS b
-        LEFT JOIN
+        JOIN
             pagamentos AS "p" ON "p".id_bordero = b.id_bling
         WHERE
             b.data BETWEEN ${rangeDate.from} AND ${rangeDate.to}
