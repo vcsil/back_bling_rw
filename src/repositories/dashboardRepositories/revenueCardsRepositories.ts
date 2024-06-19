@@ -32,6 +32,7 @@ async function getTotalStoreExpenses(rangeDate: DateRangeT): Promise<{ storeExpe
                 FROM categorias_receitas_despesas AS crd
                 WHERE
                     crd.id_tipo = 1
+                    AND NOT crd.id_bling = 14628585886
                     AND crd.id_bling NOT IN (
                         SELECT 
                                 id_categoria_filho
