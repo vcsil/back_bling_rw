@@ -6,6 +6,7 @@ type RevenueMetrics = {
     main: number;
     compare: number;
     percent: number;
+    details: string;
 };
 
 async function giftPieces(mainDates: DateRangeT, compareDates: DateRangeT): Promise<RevenueMetrics> {
@@ -14,7 +15,13 @@ async function giftPieces(mainDates: DateRangeT, compareDates: DateRangeT): Prom
 
     const percent = Math.round((mainTotalGifts / compareTotalGifts - 1) * 10000);
 
-    return { name: "Peças Marketing", main: mainTotalGifts, compare: compareTotalGifts, percent };
+    return {
+        name: "Peças Marketing",
+        main: mainTotalGifts,
+        compare: compareTotalGifts,
+        percent,
+        details: "Preço de custo das peças de presente, permutas e trocas",
+    };
 }
 
 async function storeExpenses(mainDates: DateRangeT, compareDates: DateRangeT): Promise<RevenueMetrics> {
@@ -23,7 +30,13 @@ async function storeExpenses(mainDates: DateRangeT, compareDates: DateRangeT): P
 
     const percent = Math.round((mainTotalStoreExpenses / compareTotalStoreExpenses - 1) * 10000);
 
-    return { name: "Despesas Bruta", main: mainTotalStoreExpenses, compare: compareTotalStoreExpenses, percent };
+    return {
+        name: "Despesas Bruta",
+        main: mainTotalStoreExpenses,
+        compare: compareTotalStoreExpenses,
+        percent,
+        details: "Depesas gerais da loja. Exclui: pessoais, investimentos, transferencias e permutas.",
+    };
 }
 
 async function grossRevenue(mainDates: DateRangeT, compareDates: DateRangeT): Promise<RevenueMetrics> {
@@ -32,7 +45,13 @@ async function grossRevenue(mainDates: DateRangeT, compareDates: DateRangeT): Pr
 
     const percent = Math.round((mainTotalRevenuesGross / compareTotalRevenuesGross - 1) * 10000);
 
-    return { name: "Receita Líquida", main: mainTotalRevenuesGross, compare: compareTotalRevenuesGross, percent };
+    return {
+        name: "Receita Líquida",
+        main: mainTotalRevenuesGross,
+        compare: compareTotalRevenuesGross,
+        percent,
+        details: "Todas receitas da loja. Exclui: frete, investimento, permuta e transferencias.",
+    };
 }
 
 function calculateMarkup(
@@ -48,7 +67,13 @@ function calculateMarkup(
 
     const percent = Math.round((mainProfit / compareProfit - 1) * 10000);
 
-    return { name: "Margem Lucro", main: mainNetMargin, compare: compareNetMargin, percent };
+    return {
+        name: "Margem Lucro",
+        main: mainNetMargin,
+        compare: compareNetMargin,
+        percent,
+        details: "Lucro percentual. (Lucro / Receita total)*100",
+    };
 }
 
 async function personalExpenses(mainDates: DateRangeT, compareDates: DateRangeT): Promise<RevenueMetrics> {
@@ -57,7 +82,13 @@ async function personalExpenses(mainDates: DateRangeT, compareDates: DateRangeT)
 
     const percent = Math.round((mainTotalPersonalExpenses / compareTotalPersonalExpenses - 1) * 10000);
 
-    return { name: "Despesas Pessoais", main: mainTotalPersonalExpenses, compare: compareTotalPersonalExpenses, percent };
+    return {
+        name: "Despesas Pessoais",
+        main: mainTotalPersonalExpenses,
+        compare: compareTotalPersonalExpenses,
+        percent,
+        details: "Despesas pessoais.",
+    };
 }
 
 export { giftPieces, personalExpenses, grossRevenue, calculateMarkup, storeExpenses };
