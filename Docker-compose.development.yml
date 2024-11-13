@@ -1,6 +1,6 @@
 services:
-  rw_back:
-    container_name: rw_back
+  development-rw_back:
+    container_name: development-rw_back
     restart: always
     build:
       context: .
@@ -14,9 +14,9 @@ services:
     volumes:
       - .:/usr/src/back
     networks:
-      - rw_network
+      - development-rw_network
 
 networks:
-      rw_network:
-        external: true
+  development-rw_network:
+    external: true
 
