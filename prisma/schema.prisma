@@ -385,7 +385,7 @@ model parcelas {
   formas_pagamento         formas_pagamento          @relation(fields: [id_forma_pagamento], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
 
   id_conta_receber         BigInt?
-  contas_receitas_despesas contas_receitas_despesas? @relation(fields: [id_conta_receber], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  contas_receitas_despesas contas_receitas_despesas? @relation(fields: [id_conta_receber], references: [id_bling], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model produto_fornecedor {
@@ -421,69 +421,72 @@ model produto_variacao {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model produtos {
-  id_bling                                                     BigInt                  @id
-  nome                                                         String                  @db.VarChar(120)
-  codigo                                                       String                  @db.VarChar(120)
+  id_bling                                                     BigInt                           @id
+  nome                                                         String                           @db.VarChar(120)
+  codigo                                                       String                           @db.VarChar(120)
   preco                                                        Int
 
-  id_tipo_produto                                              Int                     @default(2)
-  produtos_tipos                                               produtos_tipos          @relation(fields: [id_tipo_produto], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id_tipo_produto                                              Int                              @default(2)
+  produtos_tipos                                               produtos_tipos                   @relation(fields: [id_tipo_produto], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  situacao_produto                                             String                  @default("Ativo") @db.VarChar(10)
+  situacao_produto                                             String                           @default("Ativo") @db.VarChar(10)
 
   id_formato_produto                                           Int
-  produtos_formatos                                            produtos_formatos       @relation(fields: [id_formato_produto], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  produtos_formatos                                            produtos_formatos                @relation(fields: [id_formato_produto], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   id_produto_pai                                               BigInt?
-  produtos                                                     produtos?               @relation("produtosToprodutos", fields: [id_produto_pai], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
-  other_produtos                                               produtos[]              @relation("produtosToprodutos")
+  produtos                                                     produtos?                        @relation("produtosToprodutos", fields: [id_produto_pai], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  other_produtos                                               produtos[]                       @relation("produtosToprodutos")
 
   descricao_curta                                              String?
-  data_validade                                                DateTime?               @db.Date
-  unidade                                                      String?                 @default("UN") @db.VarChar(6)
-  peso_liquido                                                 Int                     @default(1)
-  peso_bruto                                                   Int                     @default(1)
-  volumes                                                      Int                     @default(1)
-  itens_por_caixa                                              Int                     @default(1)
-  gtin                                                         String?                 @db.VarChar(14)
-  gtin_embalagem                                               String?                 @db.VarChar(13)
+  data_validade                                                DateTime?                        @db.Date
+  unidade                                                      String?                          @default("UN") @db.VarChar(6)
+  peso_liquido                                                 Int                              @default(1)
+  peso_bruto                                                   Int                              @default(1)
+  volumes                                                      Int                              @default(1)
+  itens_por_caixa                                              Int                              @default(1)
+  gtin                                                         String?                          @db.VarChar(14)
+  gtin_embalagem                                               String?                          @db.VarChar(13)
 
-  id_tipo_producao                                             Int?                    @default(1)
-  produtos_tipo_producao                                       produtos_tipo_producao? @relation(fields: [id_tipo_producao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id_tipo_producao                                             Int?                             @default(1)
+  produtos_tipo_producao                                       produtos_tipo_producao?          @relation(fields: [id_tipo_producao], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   id_condicao_producao                                         Int
-  produtos_condicao                                            produtos_condicao       @relation(fields: [id_condicao_producao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  produtos_condicao                                            produtos_condicao                @relation(fields: [id_condicao_producao], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  frete_gratis                                                 Boolean                 @default(false)
-  marca                                                        String                  @default("RW") @db.VarChar(45)
+  frete_gratis                                                 Boolean                          @default(false)
+  marca                                                        String                           @default("RW") @db.VarChar(45)
   descricao_complementar                                       String?
   link_externo                                                 String?
   observacoes                                                  String?
 
   id_categoria_produto                                         BigInt
-  produtos_categorias                                          produtos_categorias     @relation(fields: [id_categoria_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  produtos_categorias                                          produtos_categorias              @relation(fields: [id_categoria_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
 
-  estoque_minimo                                               Int                     @default(0)
-  estoque_maximo                                               Int                     @default(0)
-  estoque_crossdocking                                         Int                     @default(0)
-  estoque_localizacao                                          String?                 @db.VarChar(45)
+  estoque_minimo                                               Int                              @default(0)
+  estoque_maximo                                               Int                              @default(0)
+  estoque_crossdocking                                         Int                              @default(0)
+  estoque_localizacao                                          String?                          @db.VarChar(45)
 
   id_dimensoes                                                 Int
-  dimensoes                                                    dimensoes               @relation(fields: [id_dimensoes], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  dimensoes                                                    dimensoes                        @relation(fields: [id_dimensoes], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  ncm                                                          String?                 @default("7113.20.00") @db.VarChar(10)
-  cest                                                         String?                 @default("28.058.00") @db.VarChar(9)
+  ncm                                                          String?                          @default("7113.20.00") @db.VarChar(10)
+  cest                                                         String?                          @default("28.058.00") @db.VarChar(9)
 
   id_midia_principal                                           Int?
-  produtos_midias                                              produtos_midias?        @relation(fields: [id_midia_principal], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  produtos_midias                                              produtos_midias?                 @relation(fields: [id_midia_principal], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  criado_em                                                    DateTime                @default(now()) @db.Timestamptz(6)
-  alterado_em                                                  DateTime?               @db.Timestamptz(6)
+  criado_em                                                    DateTime                         @default(now()) @db.Timestamptz(6)
+  alterado_em                                                  DateTime?                        @db.Timestamptz(6)
 
+  contagem_estoque                                             contagem_estoque?
   produto_fornecedor                                           produto_fornecedor[]
-  produto_variacao_produto_variacao_id_produto_filhoToprodutos produto_variacao?       @relation("produto_variacao_id_produto_filhoToprodutos")
-  produto_variacao_produto_variacao_id_produto_paiToprodutos   produto_variacao[]      @relation("produto_variacao_id_produto_paiToprodutos")
+  produto_variacao_produto_variacao_id_produto_filhoToprodutos produto_variacao?                @relation("produto_variacao_id_produto_filhoToprodutos")
+  produto_variacao_produto_variacao_id_produto_paiToprodutos   produto_variacao[]               @relation("produto_variacao_id_produto_paiToprodutos")
   produtos_estoques                                            produtos_estoques[]
+  registros_de_comparacao_balanco                              registros_de_comparacao_balanco[]
+  registros_de_estoque                                         registros_de_estoque[]
   vendas_itens_produtos                                        vendas_itens_produtos[]
 }
 
@@ -519,13 +522,15 @@ model produtos_condicao {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model produtos_depositos {
-  id_bling            BigInt              @id
-  descricao           String              @db.VarChar(45)
-  situacao            Boolean             @default(true)
-  padrao              Boolean             @default(true)
-  desconsiderar_saldo Boolean             @default(false)
+  id_bling                        BigInt                @id
+  descricao                       String                @db.VarChar(45)
+  situacao                        Boolean               @default(true)
+  padrao                          Boolean               @default(true)
+  desconsiderar_saldo             Boolean               @default(false)
 
-  produtos_estoques   produtos_estoques[]
+  produtos_estoques               produtos_estoques[]
+  registros_de_estoque            registros_de_estoque[]
+  registros_de_comparacao_balanco registros_de_comparacao_balanco[]
 }
 
 model produtos_estoques {
@@ -557,9 +562,11 @@ model produtos_formatos {
 model produtos_midias {
   id                      Int                       @id @default(autoincrement())
   tipo                    Boolean
-  url                     String?
+  url                     String
   url_miniatura           String?
-  validade                String?                   @db.VarChar(50)
+  diretorio_local         String?
+  validade                DateTime                  @db.Timestamptz(6)
+  criado_em               DateTime                  @default(now()) @db.Timestamptz(6)
 
   produtos                produtos[]
   produtos_midias_relacao produtos_midias_relacao[]
@@ -571,7 +578,7 @@ model produtos_midias_relacao {
   id_produto      BigInt
 
   id_image        Int
-  produtos_midias produtos_midias @relation(fields: [id_image], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  produtos_midias produtos_midias @relation(fields: [id_image], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -753,7 +760,7 @@ model pagamentos {
   id               Int      @id @default(autoincrement())
 
   id_bordero       BigInt
-  borderos         borderos @relation(fields: [id_bordero], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  borderos         borderos @relation(fields: [id_bordero], references: [id_bling], onDelete: Cascade, onUpdate: NoAction)
 
   id_contato       BigInt
   contatos         contatos @relation(fields: [id_contato], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
@@ -770,10 +777,10 @@ model contas_borderos_relacao {
   id                       Int                      @id @default(autoincrement())
 
   id_conta                 BigInt
-  contas_receitas_despesas contas_receitas_despesas @relation(fields: [id_conta], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  borderos                 borderos                 @relation(fields: [id_bordero], references: [id_bling], onDelete: Cascade, onUpdate: NoAction)
 
   id_bordero               BigInt
-  borderos                 borderos                 @relation(fields: [id_bordero], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  contas_receitas_despesas contas_receitas_despesas @relation(fields: [id_conta], references: [id_bling], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model contas_origem_situacoes {
@@ -788,7 +795,7 @@ model contas_origens {
   id_origem                BigInt
 
   id_conta                 BigInt
-  contas_receitas_despesas contas_receitas_despesas @relation(fields: [id_conta], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+  contas_receitas_despesas contas_receitas_despesas @relation(fields: [id_conta], references: [id_bling], onDelete: Cascade, onUpdate: NoAction)
 
   tipo_origem              String?                  @db.VarChar(63)
   numero                   String?                  @db.VarChar(63)
@@ -799,4 +806,46 @@ model contas_origens {
   contas_origem_situacoes  contas_origem_situacoes  @relation(fields: [id_conta_origem_situacao], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   url                      String?
+}
+
+model contagem_estoque {
+  id              Int      @id @default(autoincrement())
+
+  id_produto      BigInt   @unique
+  produtos        produtos @relation(fields: [id_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  codigo          String   @db.VarChar(120)
+  quantidade_lida Int
+  datetime        DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model registros_de_comparacao_balanco {
+  id                 Int      @id @default(autoincrement())
+
+  id_produto         BigInt
+  produtos           produtos @relation(fields: [id_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_deposito        BigInt
+  produtos_depositos produtos_depositos @relation(fields: [id_deposito], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  saldo_antes        Int
+  saldo_depois       Int
+  date               DateTime @default(now()) @db.Date
+}
+
+model registros_de_estoque {
+  id_bling           Int                @id @default(autoincrement())
+
+  id_produto         BigInt
+  produtos           produtos           @relation(fields: [id_produto], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  id_deposito        BigInt
+  produtos_depositos produtos_depositos @relation(fields: [id_deposito], references: [id_bling], onDelete: NoAction, onUpdate: NoAction)
+
+  operacao           String             @db.Char(1)
+  quantidade         Int
+  preco              Int
+  custo              Int
+  observacoes        String             @db.VarChar(100)
+  datetime           DateTime           @default(now()) @db.Timestamptz(6)
 }
