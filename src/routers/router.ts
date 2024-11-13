@@ -2,7 +2,7 @@ import { Router } from "express";
 import calculatorRouter from "./calculatorRouter";
 import dashboardRouter from "./dashboardRouter";
 import depositsRouter from "./depositsRouter";
-import productsRouter from "./productsRouter";
+import productsRouter from "./routersProducts/productsRouter";
 
 const router = Router();
 

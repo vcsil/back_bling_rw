@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { DateRangeStringT, DateRangeT } from "../types/utilsTypes";
 import { MyCustomError, badRequestError } from "../utils/errorUtils";
 
@@ -28,4 +29,21 @@ function checksDates(rangeDate: DateRangeStringT): DateRangeT {
     return dates;
 }
 
-export { addMinutes, checksDates };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function jsonToCsv(jsonObject: any): string {
+    const keys = Object.keys(jsonObject[0]);
+    const csvRows = [];
+
+    // Adiciona o cabeçalho (chaves do JSON)
+    csvRows.push(keys.join(","));
+
+    // Adiciona as linhas (valores do JSON)
+    for (const obj of jsonObject) {
+        const values = keys.map((key) => JSON.stringify(obj[key], (_, value) => (value !== null ? value : "")));
+        csvRows.push(values.join(","));
+    }
+
+    return csvRows.join("\n");
+}
+
+export { addMinutes, checksDates, jsonToCsv };
