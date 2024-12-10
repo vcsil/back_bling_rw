@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import * as productsServices from "../../services/products-services/productsServices";
-import { ConferenceProductsT } from "../../types/productsTypes";
+import * as productsServices from "../../services/products-services/balanceServices";
+import { ConferenceProductsT } from "../../types/balanceTypes";
 
 async function productsBalance(req: Request, res: Response) {
     const { idDeposit, codeProduct } = req.params;

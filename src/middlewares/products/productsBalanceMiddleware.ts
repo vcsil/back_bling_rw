@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { getDepositById } from "../../repositories/deposits-repositories/depositsRepositorie";
 import { MyCustomError, notFoundError } from "../../utils/errorUtils";
-import { getProductByCode } from "../../repositories/products-repositories/productsRepositories";
+import { getProductByCode } from "../../repositories/products-repositories/balanceRepositories";
 
 async function validateIdDeposit(idDeposit: number) {
     return getDepositById(idDeposit);

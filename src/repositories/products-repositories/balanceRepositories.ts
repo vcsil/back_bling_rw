@@ -8,7 +8,7 @@ import {
     ProductsBalance,
     ProductsFromCountT,
     QuantityAllProductsT,
-} from "../../types/productsTypes";
+} from "../../types/balanceTypes";
 
 async function productsForCount(idDeposit: number, codeProduct: string): Promise<ProductsBalance> {
     return prisma.produtos.findFirstOrThrow({

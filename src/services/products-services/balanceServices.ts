@@ -1,7 +1,7 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
-import * as productsRepositorie from "../../repositories/products-repositories/productsRepositories";
+import * as productsRepositorie from "../../repositories/products-repositories/balanceRepositories";
 import {
     AllBalancePerDayDepositT,
     ConferenceProductsT,
@@ -9,7 +9,7 @@ import {
     DivergentroductsT,
     ProductBalanceStructureT,
     ProductsBalance,
-} from "../../types/productsTypes";
+} from "../../types/balanceTypes";
 import { MyCustomError, badRequestError } from "../../utils/errorUtils";
 import { jsonToCsv } from "../utils";
 
