@@ -34,3 +34,8 @@ export type RevenueQueryParams = {
     compareDateFrom: string;
     compareDateTo: string;
 };
+
+export type PageQueryParams = {
+    page: string;
+    take: "6" | "18" | "48" | "96";
+};
