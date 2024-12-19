@@ -1,6 +1,6 @@
 import joi from "joi";
 
-import { ProductsBalanceParams } from "../types/balanceTypes";
+import { ProductsBalanceParams } from "../../types/balanceTypes";
 
 const stringOfNumbeRegex = /^\d+$/;
 

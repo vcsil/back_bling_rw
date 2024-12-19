@@ -1,6 +1,6 @@
 import joi from "joi";
 
-import { DateRangeT, MainCardsQueryParams, OrderSalesInPeriodQueryParams } from "../types/utilsTypes";
+import { DateRangeT, MainCardsQueryParams, OrderSalesInPeriodQueryParams } from "../../types/utilsTypes";
 
 const dateFormatRegex = /^\d{4}-\d{2}-\d{2}$/;
 const stringOfNumbeRegex = /^\d+$/;

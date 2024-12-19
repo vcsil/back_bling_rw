@@ -6,7 +6,7 @@ import {
     dateRangeSchema,
     dateRangeSituationsSalesSchema,
     datesRangesSchema,
-} from "../schemas/dashboardSchemas";
+} from "../schemas/dashboard/dashboardSchemas";
 import {
     mainCards,
     orderSituations,

@@ -3,7 +3,7 @@ import { Router } from "express";
 import * as balanceController from "../../controllers/controllersProducts/balanceController";
 
 import validateSchema from "../../middlewares/schemaValidationMiddleware";
-import { productBalanceParamsSchema } from "../../schemas/productsSchema";
+import { productBalanceParamsSchema } from "../../schemas/balance/productsSchema";
 import validateProductsBalance from "../../middlewares/products/productsBalanceMiddleware";
 
 const balanceRouter = Router();
