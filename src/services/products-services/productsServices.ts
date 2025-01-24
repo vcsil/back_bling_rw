@@ -23,14 +23,16 @@ function productListStructure(product: ProductsQuantityPerDepositT): ProductsLis
         saldo: product.produtos_estoques[0]?.saldo_fisico || 0,
         preco: product.preco,
         dir_image: product.produtos_midias?.diretorio_local || "",
-        filhos: product.other_produtos.map((productSon) => ({
-            id_produto: productSon.id_bling,
-            codigo: productSon.codigo,
-            nome: productSon.nome,
-            saldo: productSon.produtos_estoques[0].saldo_fisico,
-            preco: productSon.preco,
-            dir_image: productSon.produtos_midias?.diretorio_local || "",
-        })),
+        filhos: product.other_produtos
+            .map((productSon) => ({
+                id_produto: productSon.id_bling,
+                codigo: productSon.codigo,
+                nome: productSon.nome,
+                saldo: productSon.produtos_estoques[0].saldo_fisico,
+                preco: productSon.preco,
+                dir_image: productSon.produtos_midias?.diretorio_local || "",
+            }))
+            .sort((a, b) => a.nome.localeCompare(b.nome)),
     };
 }
 
