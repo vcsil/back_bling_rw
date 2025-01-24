@@ -26,8 +26,9 @@ async function getProductsQuantityPerDepositAndCategory(req: Request, res: Respo
 
 async function sendTotalProducts(req: Request, res: Response) {
     const { idCategory } = req.query;
+    const { text } = req.query as { text: string };
 
-    const countPrducts = await productsServices.getProductsTotalQuantity(Number(idCategory));
+    const countPrducts = await productsServices.getProductsTotalQuantity(Number(idCategory), text);
 
     return res.send({ total: countPrducts });
 }

@@ -82,8 +82,8 @@ async function getProductsQuantityPerDepositAndCategory({
     return productsList;
 }
 
-async function getProductsTotalQuantity(idCategory: number | undefined) {
-    const countProductTotal = await productsRepositorie.getProductsTotalQuantity(idCategory);
+async function getProductsTotalQuantity(idCategory: number | undefined, text: string) {
+    const countProductTotal = await productsRepositorie.getProductsTotalQuantity(idCategory, text || "");
 
     return countProductTotal;
 }

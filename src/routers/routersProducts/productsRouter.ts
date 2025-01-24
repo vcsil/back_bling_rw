@@ -33,7 +33,7 @@ productsRouter.get(
     productsController.getProductsQuantityPerDepositAndCategory,
 );
 
-// Pega a quantidade total de produtos por categoria
+// Pega a quantidade total de produtos por categoria e texto de busca
 productsRouter.get("/total", validateProductCategory, productsController.sendTotalProducts);
 
 // Busca produtos e saldo por deposito

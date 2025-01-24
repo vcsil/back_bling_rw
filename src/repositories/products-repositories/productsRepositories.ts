@@ -112,9 +112,48 @@ async function getAllProductsQuantityPerDepositAndCategory({
     });
 }
 
-async function getProductsTotalQuantity(idCategory: number | undefined): Promise<number> {
+async function getProductsTotalQuantity(idCategory: number | undefined, text: string): Promise<number> {
     return prisma.produtos.count({
         where: {
+            OR: [
+                {
+                    nome: {
+                        contains: text,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    codigo: {
+                        contains: text,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            nome: {
+                                contains: text,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            codigo: {
+                                contains: text,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                },
+                {
+                    id_bling: {
+                        equals: parseInt(text, 10) || 0,
+                    },
+                },
+            ],
             id_produto_pai: null,
             id_categoria_produto: idCategory || { not: undefined },
             situacao_produto: "Ativo",
