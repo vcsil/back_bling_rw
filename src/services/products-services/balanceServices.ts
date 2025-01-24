@@ -115,12 +115,12 @@ async function getDivergentProducts(idDeposit: number, date: Date): Promise<Dive
         dir_image: product.produtos.produtos_midias?.diretorio_local,
     }));
 
-    divergentProductsRight.sort((a, b) => {
-        const aDiferenca = a.saldo_depois - a.saldo_antes;
-        const bDiferenca = b.saldo_depois - b.saldo_antes;
+    // divergentProductsRight.sort((a, b) => {
+    //     const aDiferenca = a.saldo_depois - a.saldo_antes;
+    //     const bDiferenca = b.saldo_depois - b.saldo_antes;
 
-        return aDiferenca - bDiferenca;
-    });
+    //     return aDiferenca - bDiferenca;
+    // });
 
     return divergentProductsRight;
 }

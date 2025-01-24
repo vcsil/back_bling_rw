@@ -6,6 +6,8 @@ export default function errorHandlerMiddleware(err: MyCustomError | Error, _req:
         const statusCode = errorTypeToStatusCode(err.type);
         return res.status(statusCode).json({ error: err.message, type: err.type });
     }
+    console.log(err);
+    // console.log(_req);
 
     return res.status(500).json({ error: "Erro interno do servidor" });
 }

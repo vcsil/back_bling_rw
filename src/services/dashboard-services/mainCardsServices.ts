@@ -2,11 +2,6 @@ import * as mainCardsRepositories from "../../repositories/dashboardRepositories
 import { DateRangesSituationsT } from "../../types/utilsTypes";
 import { MainCardsReturnT } from "../../types/dashboardTypes";
 
-function formatSituationsArray(situationsString: string[]): number[] {
-    const situations = situationsString.map((id) => parseInt(id, 10));
-    return situations;
-}
-
 async function salesOrdersInPeriod({
     main: dateRangeMain,
     compare: dateRangeCompare,
@@ -51,4 +46,4 @@ function avarageTicketInPeriod(salesOrdersQuantity: MainCardsReturnT, amountInvo
     return { amount: totalMain, oldAmount: totalCompare, percent };
 }
 
-export { formatSituationsArray, salesOrdersInPeriod, productsSoldInPeriod, amountInvoicedInPeriod, avarageTicketInPeriod };
+export { salesOrdersInPeriod, productsSoldInPeriod, amountInvoicedInPeriod, avarageTicketInPeriod };

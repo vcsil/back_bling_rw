@@ -207,6 +207,11 @@ async function getAllProductsWDivergences(idDeposit: number, date: Date): Promis
             id_deposito: idDeposit,
             date,
         },
+        orderBy: {
+            produtos: {
+                nome: "asc",
+            },
+        },
     });
 }
 

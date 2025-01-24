@@ -5,7 +5,7 @@ import * as mainCardsService from "../services/dashboard-services/mainCardsServi
 import * as dashboardService from "../services/dashboard-services/dashboardServices";
 import * as revenueCardsService from "../services/dashboard-services/revenueCardsServices";
 import { MainCardsQueryParams, DateRangeT, OrderSalesInPeriodQueryParams, RevenueQueryParams } from "../types/utilsTypes";
-import { checksDates } from "../services/utils";
+import { checksDates, formatQueryArray } from "../services/utils";
 
 export async function orderSituations(_req: Request, res: Response) {
     const situations = await orderSituationsService.getOrderSituations();
@@ -18,7 +18,7 @@ export async function mainCards(req: Request, res: Response) {
 
     const mainDates = checksDates({ from: mainDateFrom, to: mainDateTo });
     const compareDates = checksDates({ from: compareDateFrom, to: compareDateTo });
-    const situationsSalesNumber = mainCardsService.formatSituationsArray(situationsSales);
+    const situationsSalesNumber = formatQueryArray(situationsSales);
 
     const serviceProps = {
         main: mainDates,
@@ -52,7 +52,7 @@ export async function orderSalesInPeriod(req: Request, res: Response) {
     const { from, to, situationsSales } = req.query as OrderSalesInPeriodQueryParams;
 
     const rangeDate: DateRangeT = checksDates({ from, to });
-    const situationsSalesNumber = mainCardsService.formatSituationsArray(situationsSales);
+    const situationsSalesNumber = formatQueryArray(situationsSales);
 
     const blingOrderStatus = await dashboardService.salesPerDayInPeriod(rangeDate, situationsSalesNumber);
 
