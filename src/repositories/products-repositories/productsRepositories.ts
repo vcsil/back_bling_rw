@@ -260,4 +260,294 @@ async function getProductsBySearch({
     });
 }
 
-export { getCategoryById, getAllCategories, getAllProductsQuantityPerDepositAndCategory, getProductsTotalQuantity, getProductsBySearch };
+async function getAllProductsForCatalogPerDepositAndCategory({
+    idDeposit,
+    idCategory,
+    page,
+    takeUnits,
+    order,
+}: GetManyProductsQueryProps): Promise<ProductsQuantityPerDepositT[]> {
+    return prisma.produtos.findMany({
+        select: {
+            id_bling: true,
+            codigo: true,
+            nome: true,
+            preco: true,
+            produtos_estoques: {
+                select: {
+                    saldo_fisico: true,
+                },
+                where: {
+                    id_deposito: idDeposit,
+                },
+            },
+            produtos_midias: {
+                select: {
+                    diretorio_local: true,
+                },
+            },
+            other_produtos: {
+                select: {
+                    id_bling: true,
+                    codigo: true,
+                    nome: true,
+                    preco: true,
+                    produtos_estoques: {
+                        select: {
+                            saldo_fisico: true,
+                        },
+                        where: {
+                            id_deposito: idDeposit,
+                        },
+                    },
+                    produtos_midias: {
+                        select: {
+                            diretorio_local: true,
+                        },
+                    },
+                },
+            },
+        },
+        where: {
+            id_produto_pai: null,
+            id_categoria_produto: idCategory || { not: undefined },
+            situacao_produto: "Ativo",
+            id_midia_principal: {
+                not: null,
+            },
+            OR: [
+                {
+                    produtos_estoques: {
+                        some: {
+                            saldo_fisico: {
+                                gt: 0,
+                            },
+                        },
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            produtos_estoques: {
+                                some: {
+                                    saldo_fisico: { gt: 0 },
+                                    id_deposito: idDeposit,
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
+        },
+        orderBy: order,
+        take: takeUnits,
+        skip: takeUnits * page,
+    });
+}
+
+async function getProductsCatalogTotalQuantity(idCategory: number | undefined, idDeposit: number, text: string): Promise<number> {
+    return prisma.produtos.count({
+        where: {
+            id_produto_pai: null,
+            id_categoria_produto: idCategory || { not: undefined },
+            situacao_produto: "Ativo",
+            id_midia_principal: {
+                not: null,
+            },
+            OR: [
+                {
+                    nome: {
+                        contains: text,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    codigo: {
+                        contains: text,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            nome: {
+                                contains: text,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            codigo: {
+                                contains: text,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                },
+                {
+                    id_bling: {
+                        equals: parseInt(text, 10) || 0,
+                    },
+                },
+                {
+                    produtos_estoques: {
+                        some: {
+                            saldo_fisico: {
+                                gt: 0,
+                            },
+                        },
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            produtos_estoques: {
+                                some: {
+                                    saldo_fisico: { gt: 0 },
+                                    id_deposito: idDeposit,
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
+        },
+    });
+}
+
+async function getCatalogProductsBySearch({
+    idDeposit,
+    idCategory,
+    page,
+    takeUnits,
+    order,
+    text,
+}: GetManyProductsQueryProps & { text: string }): Promise<ProductsQuantityPerDepositT[]> {
+    return prisma.produtos.findMany({
+        select: {
+            id_bling: true,
+            codigo: true,
+            nome: true,
+            preco: true,
+            produtos_estoques: {
+                select: {
+                    saldo_fisico: true,
+                },
+                where: {
+                    id_deposito: idDeposit,
+                },
+            },
+            produtos_midias: {
+                select: {
+                    diretorio_local: true,
+                },
+            },
+            other_produtos: {
+                select: {
+                    id_bling: true,
+                    codigo: true,
+                    nome: true,
+                    preco: true,
+                    produtos_estoques: {
+                        select: {
+                            saldo_fisico: true,
+                        },
+                        where: {
+                            id_deposito: idDeposit,
+                        },
+                    },
+                    produtos_midias: {
+                        select: {
+                            diretorio_local: true,
+                        },
+                    },
+                },
+            },
+        },
+        where: {
+            id_produto_pai: null,
+            situacao_produto: "Ativo",
+            id_categoria_produto: idCategory || { not: undefined },
+            id_midia_principal: {
+                not: null,
+            },
+            OR: [
+                {
+                    nome: {
+                        contains: text,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    codigo: {
+                        contains: text,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            nome: {
+                                contains: text,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            codigo: {
+                                contains: text,
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                },
+                {
+                    id_bling: {
+                        equals: parseInt(text, 10) || 0,
+                    },
+                },
+                {
+                    produtos_estoques: {
+                        some: {
+                            saldo_fisico: {
+                                gt: 0,
+                            },
+                        },
+                    },
+                },
+                {
+                    other_produtos: {
+                        some: {
+                            produtos_estoques: {
+                                some: {
+                                    saldo_fisico: { gt: 0 },
+                                    id_deposito: idDeposit,
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
+        },
+        orderBy: order,
+        take: takeUnits,
+        skip: takeUnits * page,
+    });
+}
+
+export {
+    getCategoryById,
+    getAllCategories,
+    getAllProductsQuantityPerDepositAndCategory,
+    getProductsTotalQuantity,
+    getProductsBySearch,
+    getAllProductsForCatalogPerDepositAndCategory,
+    getProductsCatalogTotalQuantity,
+    getCatalogProductsBySearch,
+};

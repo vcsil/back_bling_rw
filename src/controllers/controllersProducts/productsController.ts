@@ -50,4 +50,55 @@ async function getProductsBySearch(req: Request, res: Response) {
     return res.send(products);
 }
 
-export { sendAllCategories, getProductsQuantityPerDepositAndCategory, sendTotalProducts, getProductsBySearch };
+async function getProductsForCatalogPerDepositAndCategory(req: Request, res: Response) {
+    const { idDeposit, idCategory } = req.params;
+    const { page, take } = req.query;
+    const { order } = req.query as unknown as { order: OrderKeyT };
+
+    const products = await productsServices.getProductsForCatalogPerDepositAndCategory({
+        idDeposit: Number(idDeposit),
+        idCategory: Number(idCategory),
+        page: Number(page),
+        takeUnits: Number(take),
+        order,
+    });
+
+    return res.send(products);
+}
+
+async function sendTotalProductsCatalog(req: Request, res: Response) {
+    const { idDeposit } = req.params;
+    const { idCategory } = req.query;
+    const { text } = req.query as { text: string };
+
+    const countPrducts = await productsServices.getProductsCatalogTotalQuantity(Number(idCategory), Number(idDeposit), text);
+
+    return res.send({ total: countPrducts });
+}
+
+async function getCatalogProductsBySearch(req: Request, res: Response) {
+    const { idDeposit, idCategory } = req.params;
+    const { page, take, text } = req.query as { page: string; take: string; text: string };
+    const { order } = req.query as unknown as { order: OrderKeyT };
+
+    const products = await productsServices.searchingCatalogProducts({
+        idDeposit: Number(idDeposit),
+        idCategory: Number(idCategory),
+        page: Number(page),
+        takeUnits: Number(take),
+        order,
+        text,
+    });
+
+    return res.send(products);
+}
+
+export {
+    sendAllCategories,
+    getProductsQuantityPerDepositAndCategory,
+    sendTotalProducts,
+    getProductsBySearch,
+    getProductsForCatalogPerDepositAndCategory,
+    sendTotalProductsCatalog,
+    getCatalogProductsBySearch,
+};

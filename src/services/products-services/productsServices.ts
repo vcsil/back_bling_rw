@@ -112,4 +112,64 @@ async function searchingProducts({
     return productsList;
 }
 
-export { getCategories, getProductsQuantityPerDepositAndCategory, getProductsTotalQuantity, searchingProducts };
+async function getProductsForCatalogPerDepositAndCategory({
+    idDeposit,
+    idCategory,
+    page,
+    takeUnits,
+    order,
+}: GetManyProductsProps): Promise<ProductsListT[]> {
+    const sortBy: OrderModesT = sortOptions[order];
+
+    const allProducts = await productsRepositorie.getAllProductsForCatalogPerDepositAndCategory({
+        idDeposit,
+        idCategory,
+        takeUnits,
+        page,
+        order: sortBy,
+    });
+
+    const productsList = allProducts.map((product) => productListStructure(product));
+
+    return productsList;
+}
+
+async function getProductsCatalogTotalQuantity(idCategory: number | undefined, idDeposit: number, text: string) {
+    const countProductTotal = await productsRepositorie.getProductsCatalogTotalQuantity(idCategory, idDeposit, text);
+
+    return countProductTotal;
+}
+
+async function searchingCatalogProducts({
+    idDeposit,
+    idCategory,
+    page,
+    takeUnits,
+    order,
+    text,
+}: GetManyProductsProps & { text: string }): Promise<ProductsListT[]> {
+    const sortBy: OrderModesT = sortOptions[order];
+
+    const allProducts = await productsRepositorie.getCatalogProductsBySearch({
+        idDeposit,
+        idCategory,
+        page,
+        takeUnits,
+        order: sortBy,
+        text,
+    });
+
+    const productsList = allProducts.map((product) => productListStructure(product));
+
+    return productsList;
+}
+
+export {
+    getCategories,
+    getProductsQuantityPerDepositAndCategory,
+    getProductsTotalQuantity,
+    searchingProducts,
+    getProductsForCatalogPerDepositAndCategory,
+    getProductsCatalogTotalQuantity,
+    searchingCatalogProducts,
+};
